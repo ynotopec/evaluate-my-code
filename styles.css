@@ -203,3 +203,39 @@ button.primary {
     grid-template-columns: 1fr;
   }
 }
+
+.lede {
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.reference-card {
+  margin-top: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem;
+  background: #fafbff;
+}
+
+.reference-card h3 {
+  margin: 0 0 0.4rem;
+}
+
+.reference-card ul {
+  margin: 0 0 0.7rem;
+  padding-left: 1.1rem;
+}
+
+.refs-title {
+  margin: 0.6rem 0 0.3rem;
+  font-weight: 600;
+}
+
+.refs {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.refs a {
+  color: #1947d1;
+}

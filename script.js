@@ -14,9 +14,9 @@ tabs.forEach((tab) => {
 });
 
 const tutorialSteps = [
-  'Étape 1/3 — Prends connaissance de la consigne et personnalise ton environnement.',
-  'Étape 2/3 — Teste l’éditeur: écris, sauvegarde, et exécute un exemple.',
-  'Étape 3/3 — Lance le test quand tu te sens prêt(e).',
+  'Step 1/3 — Review the environment and get comfortable with the interface.',
+  'Step 2/3 — Try the editor: write code, save it, and run a quick example.',
+  'Step 3/3 — Start the assessment when you are ready.',
 ];
 let tutorialIndex = 0;
 const tutorialText = document.getElementById('tutorialText');
@@ -25,7 +25,7 @@ const progressBar = document.getElementById('progressBar');
 
 function renderTutorial() {
   tutorialText.textContent = tutorialSteps[tutorialIndex];
-  progressText.textContent = `${tutorialIndex + 1} / ${tutorialSteps.length} étapes`;
+  progressText.textContent = `${tutorialIndex + 1} / ${tutorialSteps.length} steps`;
   progressBar.style.width = `${((tutorialIndex + 1) / tutorialSteps.length) * 100}%`;
 }
 
@@ -76,7 +76,7 @@ function renderFileList() {
 }
 
 function renderSaveState() {
-  savedState.textContent = saved ? 'Sauvegardé' : 'Non sauvegardé';
+  savedState.textContent = saved ? 'Saved' : 'Unsaved';
 }
 
 editor.addEventListener('input', () => {
@@ -94,8 +94,8 @@ document.getElementById('runBtn').addEventListener('click', () => {
   files[currentFile] = editor.value;
   const hasFunction = files['index.js'].includes('sumPositive');
   output.textContent = hasFunction
-    ? '✅ Exécution simulée OK\nRésultat exemple: 6'
-    : '❌ Fonction sumPositive introuvable';
+    ? '✅ Simulated run OK\nExample result: 6'
+    : '❌ sumPositive function not found';
 });
 
 const integrityLog = document.getElementById('integrityLog');
@@ -107,11 +107,11 @@ function logIntegrity(message) {
 }
 
 editor.addEventListener('paste', () => {
-  logIntegrity('Collage détecté dans l’éditeur');
+  logIntegrity('Paste detected in the editor');
 });
 
 window.addEventListener('blur', () => {
-  logIntegrity('Sortie de la fenêtre détectée');
+  logIntegrity('Browser window blur detected');
 });
 
 let remainingSeconds = 12 * 60;
@@ -120,11 +120,11 @@ setInterval(() => {
   remainingSeconds = Math.max(0, remainingSeconds - 1);
   const m = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
   const s = String(remainingSeconds % 60).padStart(2, '0');
-  timer.textContent = `Temps: ${m}:${s}`;
+  timer.textContent = `Time: ${m}:${s}`;
 }, 1000);
 
 document.getElementById('finishBtn').addEventListener('click', () => {
-  alert('Test soumis (simulation).');
+  alert('Assessment submitted (simulation).');
 });
 
 editor.value = files[currentFile];
@@ -132,4 +132,4 @@ currentFileLabel.textContent = currentFile;
 renderFileList();
 renderSaveState();
 renderTutorial();
-logIntegrity('Session démarrée');
+logIntegrity('Session started');
