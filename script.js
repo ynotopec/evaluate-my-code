@@ -48,6 +48,8 @@ document.getElementById('nextStep').addEventListener('click', () => {
 let files = {};
 let activeQuestion = null;
 let latestScore = 0;
+let questions = [];
+let scoreHistory = [];
 
 let currentFile = 'index.js';
 let saved = true;
@@ -66,10 +68,24 @@ const completionSummary = document.getElementById('completionSummary');
 const promptText = document.getElementById('promptText');
 const scorePill = document.getElementById('scorePill');
 const integrityLog = document.getElementById('integrityLog');
+const questionSelect = document.getElementById('questionSelect');
+const attemptCount = document.getElementById('attemptCount');
+const averageScore = document.getElementById('averageScore');
 
 function updateScore(score) {
   latestScore = score;
   scorePill.textContent = `Score: ${score}/10`;
+}
+
+function updateSessionAnalytics() {
+  const attempts = scoreHistory.length;
+  const average =
+    attempts === 0
+      ? 0
+      : Math.round((scoreHistory.reduce((total, item) => total + item.score, 0) / attempts) * 10) / 10;
+
+  attemptCount.textContent = `Attempts: ${attempts}`;
+  averageScore.textContent = `Average score: ${average}/10`;
 }
 
 function createVisibleTestFile(question) {
@@ -103,6 +119,16 @@ function loadQuestion(question) {
   logIntegrity(`Loaded question: ${question.id}`);
 }
 
+function renderQuestionSelector() {
+  questionSelect.innerHTML = '';
+  questions.forEach((question, index) => {
+    const option = document.createElement('option');
+    option.value = String(index);
+    option.textContent = `${index + 1}. ${question.title}`;
+    questionSelect.appendChild(option);
+  });
+}
+
 async function initializeQuestionBank() {
   try {
     const response = await fetch('questions.json');
@@ -115,7 +141,10 @@ async function initializeQuestionBank() {
       throw new Error('Question bank is empty');
     }
 
-    loadQuestion(bank[0]);
+    questions = bank;
+    renderQuestionSelector();
+    questionSelect.value = '0';
+    loadQuestion(questions[0]);
   } catch (error) {
     output.textContent = `❌ Setup error\n${error.message}`;
     runBtn.disabled = true;
@@ -123,6 +152,15 @@ async function initializeQuestionBank() {
     logIntegrity(`Question bank load failed: ${error.message}`);
   }
 }
+
+questionSelect.addEventListener('change', () => {
+  if (isFinished) return;
+  const selectedIndex = Number(questionSelect.value);
+  const question = questions[selectedIndex];
+  if (!question) return;
+
+  loadQuestion(question);
+});
 
 function renderFileList() {
   fileList.innerHTML = '';
@@ -253,6 +291,8 @@ runBtn.addEventListener('click', () => {
     const result = evaluateCurrentSolution();
     output.textContent = result.lines.join('\n');
     updateScore(result.score);
+    scoreHistory.push({ questionId: activeQuestion.id, score: result.score });
+    updateSessionAnalytics();
     logIntegrity(`Ran automatic checks (${result.passed}/${result.total})`);
   } catch (error) {
     output.textContent = `❌ Runtime error\n${error.message}`;
@@ -334,5 +374,6 @@ renderFileList();
 renderSaveState();
 renderTutorial();
 updateScore(0);
+updateSessionAnalytics();
 logIntegrity('Session started');
 initializeQuestionBank();
