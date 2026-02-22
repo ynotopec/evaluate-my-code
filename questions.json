@@ -745,7 +745,7 @@
     "title": "Java logs - max stack depth",
     "prompt": "Contexte Java backend: implement maxStackDepth(events) where each event is 'ENTER methodName' or 'EXIT methodName'. Return the maximum call-stack depth reached; return -1 if the trace is invalid.",
     "functionName": "maxStackDepth",
-    "starterCode": "function maxStackDepth(events) {\n  // TODO: validate ENTER/EXIT ordering and compute max depth.\n  return 0;\n}\n\nmodule.exports = { maxStackDepth };\n",
+    "starterCode": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class Main {\n  public static int maxStackDepth(String[] events) {\n    Deque<String> stack = new ArrayDeque<>();\n    int maxDepth = 0;\n\n    for (String rawEvent : events) {\n      if (rawEvent == null) return -1;\n      String event = rawEvent.trim();\n      String[] parts = event.split(\"\\s+\");\n      if (parts.length != 2 || parts[1].isEmpty()) return -1;\n\n      String type = parts[0];\n      String method = parts[1];\n\n      if (\"ENTER\".equals(type)) {\n        stack.push(method);\n        if (stack.size() > maxDepth) maxDepth = stack.size();\n      } else if (\"EXIT\".equals(type)) {\n        if (stack.isEmpty() || !stack.peek().equals(method)) return -1;\n        stack.pop();\n      } else {\n        return -1;\n      }\n    }\n\n    return stack.isEmpty() ? maxDepth : -1;\n  }\n}\n",
     "tests": [
       {
         "label": "nested calls",
@@ -776,7 +776,10 @@
         ],
         "expected": 1
       }
-    ]
+    ],
+    "language": "java",
+    "starterFile": "Main.java",
+    "testFile": "TestMain.java"
   },
   {
     "id": "java-algo-30min",
@@ -785,7 +788,7 @@
     "title": "Java algo test (30 min) - longest stable throughput",
     "prompt": "Test algo Java (30 min): implement longestStableWindow(payload) where payload is [requestsPerMinute, maxGap]. Return the length of the longest contiguous window where max(requests)-min(requests) <= maxGap. In a Java interview this is typically solved with two deques (O(n)); here write equivalent logic.",
     "functionName": "longestStableWindow",
-    "starterCode": "function longestStableWindow(payload) {\n  const [requestsPerMinute, maxGap] = payload;\n  // TODO: sliding window with monotonic queues for max/min.\n  return 0;\n}\n\nmodule.exports = { longestStableWindow };\n",
+    "starterCode": "public class Main {\n  public static int longestStableWindow(int[] requestsPerMinute, int maxGap) {\n    // TODO: sliding window with monotonic queues for max/min in O(n).\n    return 0;\n  }\n}\n",
     "tests": [
       {
         "label": "classic sliding window",
@@ -827,6 +830,9 @@
         ],
         "expected": 1
       }
-    ]
+    ],
+    "language": "java",
+    "starterFile": "Main.java",
+    "testFile": "TestMain.java"
   }
 ]
