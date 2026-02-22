@@ -1,1 +1,11 @@
-generate website like https://screen-ide.coderpad.io/?id=134766637a4fc020a82000c31984845fd3bb7193
+# Screen IDE-style mock webpage
+
+This repository now contains a static webpage inspired by the requested Screen IDE layout.
+
+## Run locally
+
+```bash
+python3 -m http.server 4173
+```
+
+Then open <http://localhost:4173>.
