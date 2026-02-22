@@ -1,6 +1,11 @@
 # Assessment welcome page
 
-This repository contains a static webpage that provides a candidate coding-screen IDE flow and includes a tutorial section explaining what `screen-ide.coderpad.io` is, with key characteristics and source links. The editor now executes the actual in-app `test.js` file against `index.js` instead of returning a mocked run result.
+This repository contains a static webpage for an online coding assessment flow where candidates can:
+
+- write and run code directly in the browser,
+- solve a coding prompt with automatic checks,
+- complete the assessment within a time limit,
+- generate integrity events used for evaluation.
 
 ## Run locally
 

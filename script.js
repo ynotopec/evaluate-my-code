@@ -21,8 +21,8 @@ tabs.forEach((tab) => {
 
 const tutorialSteps = [
   'Step 1/3 — Review the environment and get comfortable with the interface.',
-  'Step 2/3 — Try the editor: write code, save it, and run the real test file.',
-  'Step 3/3 — Start the assessment when you are ready.',
+  'Step 2/3 — Try the editor: write code, save it, and run the automatic checks.',
+  'Step 3/3 — Submit before the timer ends.',
 ];
 let tutorialIndex = 0;
 const tutorialText = document.getElementById('tutorialText');
@@ -47,8 +47,8 @@ document.getElementById('nextStep').addEventListener('click', () => {
 
 const files = {
   'index.js': `function sumPositive(numbers) {\n  return numbers.filter((n) => n > 0).reduce((a, b) => a + b, 0);\n}\n\nmodule.exports = { sumPositive };\n`,
-  'README.md': `# Challenge\n\nCréez la fonction sumPositive(numbers).\n`,
-  'test.js': `const { sumPositive } = require('./index');\nconsole.log('Résultat attendu 6 =>', sumPositive([-2, 1, 2, 3]));\n`,
+  'README.md': `# Challenge\n\nImplement sumPositive(numbers) so it returns the sum of all positive numbers.\n`,
+  'test.js': `const { sumPositive } = require('./index');\n\nfunction assertEqual(actual, expected, label) {\n  if (actual !== expected) {\n    throw new Error(\`\${label}: expected \${expected}, got \${actual}\`);\n  }\n}\n\nassertEqual(sumPositive([-2, 1, 2, 3]), 6, 'mixed values');\nassertEqual(sumPositive([0, -1, -9]), 0, 'no positive numbers');\nassertEqual(sumPositive([10, 20, 30]), 60, 'all positive numbers');\n\nconsole.log('✅ 3/3 tests passed');\n`,
 };
 
 let currentFile = 'index.js';
@@ -79,6 +79,7 @@ function renderFileList() {
       if (isFinished) return;
       files[currentFile] = editor.value;
       currentFile = fileName;
+      logIntegrity(`Switched file to ${fileName}`);
       currentFileLabel.textContent = currentFile;
       editor.value = files[currentFile];
       saved = true;
@@ -147,6 +148,7 @@ saveBtn.addEventListener('click', () => {
   files[currentFile] = editor.value;
   saved = true;
   renderSaveState();
+  logIntegrity(`Saved ${currentFile}`);
 });
 
 runBtn.addEventListener('click', () => {
@@ -159,8 +161,10 @@ runBtn.addEventListener('click', () => {
   try {
     runModule('test.js', {}, printLine);
     output.textContent = lines.length > 0 ? lines.join('\n') : 'Execution finished with no output.';
+    logIntegrity('Ran automatic checks');
   } catch (error) {
     output.textContent = `❌ Runtime error\n${error.message}`;
+    logIntegrity(`Test run failed: ${error.message}`);
   }
 });
 
