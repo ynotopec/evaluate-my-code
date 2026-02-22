@@ -46,7 +46,7 @@ document.getElementById('nextStep').addEventListener('click', () => {
 });
 
 const files = {
-  'index.js': `function sumPositive(numbers) {\n  return numbers.filter((n) => n > 0).reduce((a, b) => a + b, 0);\n}\n\nmodule.exports = { sumPositive };\n`,
+  'index.js': `function sumPositive(numbers) {\n  // TODO: return the sum of positive numbers only.\n  // Example: [-2, 1, 2, 3] -> 6\n  return 0;\n}\n\nmodule.exports = { sumPositive };\n`,
   'README.md': `# Challenge\n\nImplement sumPositive(numbers) so it returns the sum of all positive numbers.\n`,
   'test.js': `const { sumPositive } = require('./index');\n\nfunction assertEqual(actual, expected, label) {\n  if (actual !== expected) {\n    throw new Error(\`\${label}: expected \${expected}, got \${actual}\`);\n  }\n}\n\nassertEqual(sumPositive([-2, 1, 2, 3]), 6, 'mixed values');\nassertEqual(sumPositive([0, -1, -9]), 0, 'no positive numbers');\nassertEqual(sumPositive([10, 20, 30]), 60, 'all positive numbers');\n\nconsole.log('✅ 3/3 tests passed');\n`,
 };
