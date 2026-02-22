@@ -17,6 +17,7 @@
         <div class="meta">
           <span id="sessionStatus" class="status-pill" aria-live="polite">Session in progress</span>
           <span id="timer">Time: 12:00</span>
+          <span id="scorePill" class="status-pill" aria-live="polite">Score: 0/10</span>
           <button id="finishBtn" class="primary">Finish</button>
         </div>
       </header>
@@ -74,11 +75,9 @@
             <h3>Files</h3>
             <ul id="fileList" class="file-list"></ul>
             <h3>Prompt</h3>
-            <p>
-              Implement <code>sumPositive(numbers)</code> so it returns the sum of all positive
-              numbers in the array.
-            </p>
+            <p id="promptText"></p>
             <p>The starter in <code>index.js</code> is intentionally incomplete.</p>
+            <p id="questionSource">Question bank: <code>questions.json</code></p>
           </aside>
 
           <div class="editor-wrap">

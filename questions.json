@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sum-positive",
+    "title": "Sum positive numbers",
+    "prompt": "Implement sumPositive(numbers) so it returns the sum of all positive numbers in the array.",
+    "functionName": "sumPositive",
+    "starterCode": "function sumPositive(numbers) {\n  // TODO: return the sum of positive numbers only.\n  // Example: [-2, 1, 2, 3] -> 6\n  return 0;\n}\n\nmodule.exports = { sumPositive };\n",
+    "tests": [
+      { "label": "mixed values", "input": [-2, 1, 2, 3], "expected": 6 },
+      { "label": "no positive numbers", "input": [0, -1, -9], "expected": 0 },
+      { "label": "all positive numbers", "input": [10, 20, 30], "expected": 60 }
+    ]
+  }
+]
