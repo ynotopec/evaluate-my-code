@@ -8,9 +8,34 @@
     "functionName": "sumPositive",
     "starterCode": "function sumPositive(numbers) {\n  // TODO: return the sum of positive numbers only.\n  // Example: [-2, 1, 2, 3] -> 6\n  return 0;\n}\n\nmodule.exports = { sumPositive };\n",
     "tests": [
-      { "label": "mixed values", "input": [-2, 1, 2, 3], "expected": 6 },
-      { "label": "no positive numbers", "input": [0, -1, -9], "expected": 0 },
-      { "label": "all positive numbers", "input": [10, 20, 30], "expected": 60 }
+      {
+        "label": "mixed values",
+        "input": [
+          -2,
+          1,
+          2,
+          3
+        ],
+        "expected": 6
+      },
+      {
+        "label": "no positive numbers",
+        "input": [
+          0,
+          -1,
+          -9
+        ],
+        "expected": 0
+      },
+      {
+        "label": "all positive numbers",
+        "input": [
+          10,
+          20,
+          30
+        ],
+        "expected": 60
+      }
     ]
   },
   {
@@ -22,9 +47,21 @@
     "functionName": "countVowels",
     "starterCode": "function countVowels(text) {\n  // TODO: count all vowels (a, e, i, o, u), ignoring case.\n  return 0;\n}\n\nmodule.exports = { countVowels };\n",
     "tests": [
-      { "label": "mixed casing", "input": "ApplE", "expected": 2 },
-      { "label": "no vowels", "input": "rhythm", "expected": 0 },
-      { "label": "sentence", "input": "Hello Interview", "expected": 5 }
+      {
+        "label": "mixed casing",
+        "input": "ApplE",
+        "expected": 2
+      },
+      {
+        "label": "no vowels",
+        "input": "rhythm",
+        "expected": 0
+      },
+      {
+        "label": "sentence",
+        "input": "Hello Interview",
+        "expected": 5
+      }
     ]
   },
   {
@@ -36,9 +73,21 @@
     "functionName": "isPalindrome",
     "starterCode": "function isPalindrome(text) {\n  // TODO: normalize casing/spaces and check if mirrored.\n  return false;\n}\n\nmodule.exports = { isPalindrome };\n",
     "tests": [
-      { "label": "simple palindrome", "input": "level", "expected": true },
-      { "label": "with spaces", "input": "Never odd or even", "expected": true },
-      { "label": "not palindrome", "input": "coding", "expected": false }
+      {
+        "label": "simple palindrome",
+        "input": "level",
+        "expected": true
+      },
+      {
+        "label": "with spaces",
+        "input": "Never odd or even",
+        "expected": true
+      },
+      {
+        "label": "not palindrome",
+        "input": "coding",
+        "expected": false
+      }
     ]
   },
   {
@@ -50,9 +99,36 @@
     "functionName": "maxConsecutiveOnes",
     "starterCode": "function maxConsecutiveOnes(bits) {\n  // TODO: return the maximum number of consecutive 1 values.\n  return 0;\n}\n\nmodule.exports = { maxConsecutiveOnes };\n",
     "tests": [
-      { "label": "single streak", "input": [1, 1, 0, 1], "expected": 2 },
-      { "label": "no ones", "input": [0, 0, 0], "expected": 0 },
-      { "label": "ends with streak", "input": [0, 1, 1, 1, 1], "expected": 4 }
+      {
+        "label": "single streak",
+        "input": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "expected": 2
+      },
+      {
+        "label": "no ones",
+        "input": [
+          0,
+          0,
+          0
+        ],
+        "expected": 0
+      },
+      {
+        "label": "ends with streak",
+        "input": [
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "expected": 4
+      }
     ]
   },
   {
@@ -64,9 +140,21 @@
     "functionName": "sumMultiples",
     "starterCode": "function sumMultiples(limit) {\n  // TODO: sum all numbers n where 0 <= n < limit and n is divisible by 3 or 5.\n  return 0;\n}\n\nmodule.exports = { sumMultiples };\n",
     "tests": [
-      { "label": "limit 10", "input": 10, "expected": 23 },
-      { "label": "limit 1", "input": 1, "expected": 0 },
-      { "label": "limit 16", "input": 16, "expected": 60 }
+      {
+        "label": "limit 10",
+        "input": 10,
+        "expected": 23
+      },
+      {
+        "label": "limit 1",
+        "input": 1,
+        "expected": 0
+      },
+      {
+        "label": "limit 16",
+        "input": 16,
+        "expected": 60
+      }
     ]
   },
   {
@@ -78,9 +166,21 @@
     "functionName": "titleCase",
     "starterCode": "function titleCase(sentence) {\n  // TODO: convert each word to Title Case.\n  return '';\n}\n\nmodule.exports = { titleCase };\n",
     "tests": [
-      { "label": "basic sentence", "input": "hello world", "expected": "Hello World" },
-      { "label": "mixed casing", "input": "jAVaScRipt rocks", "expected": "Javascript Rocks" },
-      { "label": "single word", "input": "code", "expected": "Code" }
+      {
+        "label": "basic sentence",
+        "input": "hello world",
+        "expected": "Hello World"
+      },
+      {
+        "label": "mixed casing",
+        "input": "jAVaScRipt rocks",
+        "expected": "Javascript Rocks"
+      },
+      {
+        "label": "single word",
+        "input": "code",
+        "expected": "Code"
+      }
     ]
   },
   {
@@ -92,9 +192,21 @@
     "functionName": "firstUniqueIndex",
     "starterCode": "function firstUniqueIndex(text) {\n  // TODO: find the first index whose character appears exactly once.\n  return -1;\n}\n\nmodule.exports = { firstUniqueIndex };\n",
     "tests": [
-      { "label": "found in middle", "input": "swiss", "expected": 1 },
-      { "label": "first char unique", "input": "leetcode", "expected": 0 },
-      { "label": "none unique", "input": "aabb", "expected": -1 }
+      {
+        "label": "found in middle",
+        "input": "swiss",
+        "expected": 1
+      },
+      {
+        "label": "first char unique",
+        "input": "leetcode",
+        "expected": 0
+      },
+      {
+        "label": "none unique",
+        "input": "aabb",
+        "expected": -1
+      }
     ]
   },
   {
@@ -106,9 +218,21 @@
     "functionName": "isValidParentheses",
     "starterCode": "function isValidParentheses(text) {\n  // TODO: validate bracket ordering and pairing.\n  return false;\n}\n\nmodule.exports = { isValidParentheses };\n",
     "tests": [
-      { "label": "proper nesting", "input": "([{}])", "expected": true },
-      { "label": "crossed nesting", "input": "([)]", "expected": false },
-      { "label": "missing closing", "input": "(([]", "expected": false }
+      {
+        "label": "proper nesting",
+        "input": "([{}])",
+        "expected": true
+      },
+      {
+        "label": "crossed nesting",
+        "input": "([)]",
+        "expected": false
+      },
+      {
+        "label": "missing closing",
+        "input": "(([]",
+        "expected": false
+      }
     ]
   },
   {
@@ -120,9 +244,21 @@
     "functionName": "encodedLength",
     "starterCode": "function encodedLength(text) {\n  // TODO: compute resulting length after run-length encoding without building huge strings.\n  return 0;\n}\n\nmodule.exports = { encodedLength };\n",
     "tests": [
-      { "label": "simple", "input": "aaabb", "expected": 4 },
-      { "label": "single chars", "input": "abcd", "expected": 8 },
-      { "label": "long run", "input": "aaaaaaaaaaa", "expected": 3 }
+      {
+        "label": "simple",
+        "input": "aaabb",
+        "expected": 4
+      },
+      {
+        "label": "single chars",
+        "input": "abcd",
+        "expected": 8
+      },
+      {
+        "label": "long run",
+        "input": "aaaaaaaaaaa",
+        "expected": 3
+      }
     ]
   },
   {
@@ -134,9 +270,35 @@
     "functionName": "peakScore",
     "starterCode": "function peakScore(changes) {\n  // TODO: compute max prefix sum while iterating through changes.\n  return 0;\n}\n\nmodule.exports = { peakScore };\n",
     "tests": [
-      { "label": "grows then drops", "input": [5, -2, 3, -10], "expected": 6 },
-      { "label": "always dropping", "input": [-1, -2, -3], "expected": 0 },
-      { "label": "steady growth", "input": [1, 1, 1, 1], "expected": 4 }
+      {
+        "label": "grows then drops",
+        "input": [
+          5,
+          -2,
+          3,
+          -10
+        ],
+        "expected": 6
+      },
+      {
+        "label": "always dropping",
+        "input": [
+          -1,
+          -2,
+          -3
+        ],
+        "expected": 0
+      },
+      {
+        "label": "steady growth",
+        "input": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "expected": 4
+      }
     ]
   },
   {
@@ -148,9 +310,64 @@
     "functionName": "minMeetingRooms",
     "starterCode": "function minMeetingRooms(startsAndEnds) {\n  // TODO: calculate the max overlap of meeting intervals.\n  return 0;\n}\n\nmodule.exports = { minMeetingRooms };\n",
     "tests": [
-      { "label": "overlapping meetings", "input": [[0, 30], [5, 10], [15, 20]], "expected": 2 },
-      { "label": "non-overlapping", "input": [[7, 10], [10, 12], [12, 13]], "expected": 1 },
-      { "label": "heavy overlap", "input": [[1, 4], [2, 5], [3, 6], [7, 8]], "expected": 3 }
+      {
+        "label": "overlapping meetings",
+        "input": [
+          [
+            0,
+            30
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            15,
+            20
+          ]
+        ],
+        "expected": 2
+      },
+      {
+        "label": "non-overlapping",
+        "input": [
+          [
+            7,
+            10
+          ],
+          [
+            10,
+            12
+          ],
+          [
+            12,
+            13
+          ]
+        ],
+        "expected": 1
+      },
+      {
+        "label": "heavy overlap",
+        "input": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ],
+        "expected": 3
+      }
     ]
   },
   {
@@ -162,9 +379,35 @@
     "functionName": "minJumps",
     "starterCode": "function minJumps(nums) {\n  // TODO: compute minimal jumps from index 0 to the last index.\n  return 0;\n}\n\nmodule.exports = { minJumps };\n",
     "tests": [
-      { "label": "classic case", "input": [2, 3, 1, 1, 4], "expected": 2 },
-      { "label": "already at end", "input": [0], "expected": 0 },
-      { "label": "longer array", "input": [2, 3, 0, 1, 4], "expected": 2 }
+      {
+        "label": "classic case",
+        "input": [
+          2,
+          3,
+          1,
+          1,
+          4
+        ],
+        "expected": 2
+      },
+      {
+        "label": "already at end",
+        "input": [
+          0
+        ],
+        "expected": 0
+      },
+      {
+        "label": "longer array",
+        "input": [
+          2,
+          3,
+          0,
+          1,
+          4
+        ],
+        "expected": 2
+      }
     ]
   },
   {
@@ -176,9 +419,30 @@
     "functionName": "longestWithKDistinct",
     "starterCode": "function longestWithKDistinct(payload) {\n  const [text, k] = payload;\n  // TODO: sliding window over text using at most k distinct chars.\n  return 0;\n}\n\nmodule.exports = { longestWithKDistinct };\n",
     "tests": [
-      { "label": "example", "input": ["eceba", 2], "expected": 3 },
-      { "label": "single distinct allowed", "input": ["aa", 1], "expected": 2 },
-      { "label": "zero distinct", "input": ["abc", 0], "expected": 0 }
+      {
+        "label": "example",
+        "input": [
+          "eceba",
+          2
+        ],
+        "expected": 3
+      },
+      {
+        "label": "single distinct allowed",
+        "input": [
+          "aa",
+          1
+        ],
+        "expected": 2
+      },
+      {
+        "label": "zero distinct",
+        "input": [
+          "abc",
+          0
+        ],
+        "expected": 0
+      }
     ]
   },
   {
@@ -190,9 +454,40 @@
     "functionName": "minCoins",
     "starterCode": "function minCoins(payload) {\n  const [coins, amount] = payload;\n  // TODO: dynamic programming for minimum coin count.\n  return -1;\n}\n\nmodule.exports = { minCoins };\n",
     "tests": [
-      { "label": "possible", "input": [[1, 2, 5], 11], "expected": 3 },
-      { "label": "impossible", "input": [[2], 3], "expected": -1 },
-      { "label": "zero amount", "input": [[1, 3, 4], 0], "expected": 0 }
+      {
+        "label": "possible",
+        "input": [
+          [
+            1,
+            2,
+            5
+          ],
+          11
+        ],
+        "expected": 3
+      },
+      {
+        "label": "impossible",
+        "input": [
+          [
+            2
+          ],
+          3
+        ],
+        "expected": -1
+      },
+      {
+        "label": "zero amount",
+        "input": [
+          [
+            1,
+            3,
+            4
+          ],
+          0
+        ],
+        "expected": 0
+      }
     ]
   },
   {
@@ -204,9 +499,334 @@
     "functionName": "peakBandwidth",
     "starterCode": "function peakBandwidth(events) {\n  // TODO: calculate max concurrent load over time.\n  return 0;\n}\n\nmodule.exports = { peakBandwidth };\n",
     "tests": [
-      { "label": "basic overlap", "input": [[1, 4, 3], [2, 5, 4], [7, 9, 6]], "expected": 7 },
-      { "label": "all overlap", "input": [[0, 10, 2], [1, 9, 3], [2, 8, 5]], "expected": 10 },
-      { "label": "touching edges", "input": [[1, 3, 4], [3, 5, 6]], "expected": 6 }
+      {
+        "label": "basic overlap",
+        "input": [
+          [
+            1,
+            4,
+            3
+          ],
+          [
+            2,
+            5,
+            4
+          ],
+          [
+            7,
+            9,
+            6
+          ]
+        ],
+        "expected": 7
+      },
+      {
+        "label": "all overlap",
+        "input": [
+          [
+            0,
+            10,
+            2
+          ],
+          [
+            1,
+            9,
+            3
+          ],
+          [
+            2,
+            8,
+            5
+          ]
+        ],
+        "expected": 10
+      },
+      {
+        "label": "touching edges",
+        "input": [
+          [
+            1,
+            3,
+            4
+          ],
+          [
+            3,
+            5,
+            6
+          ]
+        ],
+        "expected": 6
+      }
+    ]
+  },
+  {
+    "id": "web-rate-limit-window",
+    "level": "Intermediate",
+    "estimatedMinutes": 12,
+    "title": "Web API rate-limit window",
+    "prompt": "Contexte web backend: implement requestsAllowed(payload) where payload is [timestamps, windowSeconds, maxRequests]. timestamps is sorted (seconds). Return the number of requests that can be accepted if each accepted request must keep <= maxRequests accepted requests within the rolling window.",
+    "functionName": "requestsAllowed",
+    "starterCode": "function requestsAllowed(payload) {\n  const [timestamps, windowSeconds, maxRequests] = payload;\n  // TODO: simulate a rolling rate-limit window.\n  return 0;\n}\n\nmodule.exports = { requestsAllowed };\n",
+    "tests": [
+      {
+        "label": "basic burst",
+        "input": [
+          [
+            1,
+            1,
+            1,
+            2,
+            2,
+            3
+          ],
+          1,
+          2
+        ],
+        "expected": 4
+      },
+      {
+        "label": "wide window",
+        "input": [
+          [
+            1,
+            2,
+            3,
+            10
+          ],
+          5,
+          3
+        ],
+        "expected": 4
+      },
+      {
+        "label": "strict limit",
+        "input": [
+          [
+            1,
+            2,
+            2,
+            2,
+            3
+          ],
+          2,
+          1
+        ],
+        "expected": 2
+      }
+    ]
+  },
+  {
+    "id": "sql-monthly-active-users",
+    "level": "Intermediate",
+    "estimatedMinutes": 10,
+    "title": "SQL analytics - monthly active users",
+    "prompt": "Contexte SQL: implement monthlyActiveUsers(events) where events is an array of strings 'userId:YYYY-MM'. Return the number of distinct users active during at least 2 different months.",
+    "functionName": "monthlyActiveUsers",
+    "starterCode": "function monthlyActiveUsers(events) {\n  // TODO: count users present in at least 2 different months.\n  return 0;\n}\n\nmodule.exports = { monthlyActiveUsers };\n",
+    "tests": [
+      {
+        "label": "two recurring users",
+        "input": [
+          "u1:2025-01",
+          "u2:2025-01",
+          "u1:2025-02",
+          "u3:2025-03",
+          "u2:2025-01"
+        ],
+        "expected": 1
+      },
+      {
+        "label": "multiple recurring",
+        "input": [
+          "u1:2025-01",
+          "u1:2025-02",
+          "u2:2025-02",
+          "u2:2025-03",
+          "u3:2025-03"
+        ],
+        "expected": 2
+      },
+      {
+        "label": "no recurring",
+        "input": [
+          "u1:2025-01",
+          "u2:2025-02",
+          "u3:2025-03"
+        ],
+        "expected": 0
+      }
+    ]
+  },
+  {
+    "id": "angular-form-validity-score",
+    "level": "Intermediate",
+    "estimatedMinutes": 10,
+    "title": "Angular form validation score",
+    "prompt": "Contexte Angular: implement validControlsCount(formSnapshot) where formSnapshot is an array of controls [name, value, validators] and validators is an array containing 'required', 'email', or 'min6'. Return how many controls are valid.",
+    "functionName": "validControlsCount",
+    "starterCode": "function validControlsCount(formSnapshot) {\n  // TODO: apply required/email/min6 validators and count valid controls.\n  return 0;\n}\n\nmodule.exports = { validControlsCount };\n",
+    "tests": [
+      {
+        "label": "mixed validity",
+        "input": [
+          [
+            "email",
+            "dev@acme.com",
+            [
+              "required",
+              "email"
+            ]
+          ],
+          [
+            "password",
+            "12345",
+            [
+              "required",
+              "min6"
+            ]
+          ],
+          [
+            "city",
+            "Paris",
+            []
+          ]
+        ],
+        "expected": 2
+      },
+      {
+        "label": "all valid",
+        "input": [
+          [
+            "email",
+            "a@b.com",
+            [
+              "required",
+              "email"
+            ]
+          ],
+          [
+            "password",
+            "abcdef",
+            [
+              "required",
+              "min6"
+            ]
+          ]
+        ],
+        "expected": 2
+      },
+      {
+        "label": "all invalid",
+        "input": [
+          [
+            "email",
+            "not-an-email",
+            [
+              "email"
+            ]
+          ],
+          [
+            "password",
+            "",
+            [
+              "required",
+              "min6"
+            ]
+          ]
+        ],
+        "expected": 0
+      }
+    ]
+  },
+  {
+    "id": "java-stack-trace-depth",
+    "level": "Advanced",
+    "estimatedMinutes": 12,
+    "title": "Java logs - max stack depth",
+    "prompt": "Contexte Java backend: implement maxStackDepth(events) where each event is 'ENTER methodName' or 'EXIT methodName'. Return the maximum call-stack depth reached; return -1 if the trace is invalid.",
+    "functionName": "maxStackDepth",
+    "starterCode": "function maxStackDepth(events) {\n  // TODO: validate ENTER/EXIT ordering and compute max depth.\n  return 0;\n}\n\nmodule.exports = { maxStackDepth };\n",
+    "tests": [
+      {
+        "label": "nested calls",
+        "input": [
+          "ENTER A",
+          "ENTER B",
+          "EXIT B",
+          "EXIT A"
+        ],
+        "expected": 2
+      },
+      {
+        "label": "invalid exit order",
+        "input": [
+          "ENTER A",
+          "ENTER B",
+          "EXIT A"
+        ],
+        "expected": -1
+      },
+      {
+        "label": "flat calls",
+        "input": [
+          "ENTER A",
+          "EXIT A",
+          "ENTER B",
+          "EXIT B"
+        ],
+        "expected": 1
+      }
+    ]
+  },
+  {
+    "id": "java-algo-30min",
+    "level": "Advanced",
+    "estimatedMinutes": 30,
+    "title": "Java algo test (30 min) - longest stable throughput",
+    "prompt": "Test algo Java (30 min): implement longestStableWindow(payload) where payload is [requestsPerMinute, maxGap]. Return the length of the longest contiguous window where max(requests)-min(requests) <= maxGap. In a Java interview this is typically solved with two deques (O(n)); here write equivalent logic.",
+    "functionName": "longestStableWindow",
+    "starterCode": "function longestStableWindow(payload) {\n  const [requestsPerMinute, maxGap] = payload;\n  // TODO: sliding window with monotonic queues for max/min.\n  return 0;\n}\n\nmodule.exports = { longestStableWindow };\n",
+    "tests": [
+      {
+        "label": "classic sliding window",
+        "input": [
+          [
+            10,
+            1,
+            2,
+            4,
+            7,
+            2
+          ],
+          5
+        ],
+        "expected": 4
+      },
+      {
+        "label": "all stable",
+        "input": [
+          [
+            5,
+            6,
+            7,
+            8
+          ],
+          3
+        ],
+        "expected": 4
+      },
+      {
+        "label": "single element only",
+        "input": [
+          [
+            1,
+            10,
+            20
+          ],
+          0
+        ],
+        "expected": 1
+      }
     ]
   }
 ]
