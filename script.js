@@ -45,11 +45,9 @@ document.getElementById('nextStep').addEventListener('click', () => {
   renderTutorial();
 });
 
-const files = {
-  'index.js': `function sumPositive(numbers) {\n  return numbers.filter((n) => n > 0).reduce((a, b) => a + b, 0);\n}\n\nmodule.exports = { sumPositive };\n`,
-  'README.md': `# Challenge\n\nImplement sumPositive(numbers) so it returns the sum of all positive numbers.\n`,
-  'test.js': `const { sumPositive } = require('./index');\n\nfunction assertEqual(actual, expected, label) {\n  if (actual !== expected) {\n    throw new Error(\`\${label}: expected \${expected}, got \${actual}\`);\n  }\n}\n\nassertEqual(sumPositive([-2, 1, 2, 3]), 6, 'mixed values');\nassertEqual(sumPositive([0, -1, -9]), 0, 'no positive numbers');\nassertEqual(sumPositive([10, 20, 30]), 60, 'all positive numbers');\n\nconsole.log('✅ 3/3 tests passed');\n`,
-};
+let files = {};
+let activeQuestion = null;
+let latestScore = 0;
 
 let currentFile = 'index.js';
 let saved = true;
@@ -65,6 +63,66 @@ const saveBtn = document.getElementById('saveBtn');
 const sessionStatus = document.getElementById('sessionStatus');
 const completionCard = document.getElementById('completionCard');
 const completionSummary = document.getElementById('completionSummary');
+const promptText = document.getElementById('promptText');
+const scorePill = document.getElementById('scorePill');
+const integrityLog = document.getElementById('integrityLog');
+
+function updateScore(score) {
+  latestScore = score;
+  scorePill.textContent = `Score: ${score}/10`;
+}
+
+function createVisibleTestFile(question) {
+  const cases = question.tests
+    .map(
+      (test) =>
+        `assertEqual(${question.functionName}(${JSON.stringify(test.input)}), ${test.expected}, '${test.label}');`,
+    )
+    .join('\n');
+
+  return `const { ${question.functionName} } = require('./index');\n\nfunction assertEqual(actual, expected, label) {\n  if (actual !== expected) {\n    throw new Error(\`${'${label}'}: expected ${'${expected}'}, got ${'${actual}'}\`);\n  }\n}\n\n${cases}\n\nconsole.log('✅ ${question.tests.length}/${question.tests.length} tests passed');\n`;
+}
+
+function loadQuestion(question) {
+  activeQuestion = question;
+  promptText.textContent = question.prompt;
+  files = {
+    'index.js': question.starterCode,
+    'README.md': `# Challenge\n\n${question.prompt}\n`,
+    'test.js': createVisibleTestFile(question),
+  };
+
+  currentFile = 'index.js';
+  editor.value = files[currentFile];
+  currentFileLabel.textContent = currentFile;
+  saved = true;
+  renderSaveState();
+  renderFileList();
+  output.textContent = 'Console output…';
+  updateScore(0);
+  logIntegrity(`Loaded question: ${question.id}`);
+}
+
+async function initializeQuestionBank() {
+  try {
+    const response = await fetch('questions.json');
+    if (!response.ok) {
+      throw new Error(`Unable to load questions.json (${response.status})`);
+    }
+
+    const bank = await response.json();
+    if (!Array.isArray(bank) || bank.length === 0) {
+      throw new Error('Question bank is empty');
+    }
+
+    loadQuestion(bank[0]);
+  } catch (error) {
+    output.textContent = `❌ Setup error\n${error.message}`;
+    runBtn.disabled = true;
+    saveBtn.disabled = true;
+    logIntegrity(`Question bank load failed: ${error.message}`);
+  }
+}
 
 function renderFileList() {
   fileList.innerHTML = '';
@@ -137,6 +195,42 @@ function runModule(fileName, cache, printLine) {
   return module.exports;
 }
 
+function deepCloneValue(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function evaluateCurrentSolution() {
+  const lines = [];
+  const printLine = (line) => lines.push(line);
+  const exported = runModule('index.js', {}, printLine);
+
+  if (!activeQuestion) {
+    throw new Error('No active question loaded');
+  }
+
+  const candidateFn = exported[activeQuestion.functionName];
+  if (typeof candidateFn !== 'function') {
+    throw new Error(`Expected exported function '${activeQuestion.functionName}'`);
+  }
+
+  let passed = 0;
+  activeQuestion.tests.forEach((test) => {
+    const actual = candidateFn(deepCloneValue(test.input));
+    if (actual === test.expected) {
+      passed += 1;
+      lines.push(`✅ ${test.label}`);
+      return;
+    }
+    lines.push(`❌ ${test.label}: expected ${test.expected}, got ${actual}`);
+  });
+
+  const score = Math.round((passed / activeQuestion.tests.length) * 10);
+  lines.push(`\nResult: ${passed}/${activeQuestion.tests.length} tests passed`);
+  lines.push(`Application score: ${score}/10`);
+
+  return { lines, score, passed, total: activeQuestion.tests.length };
+}
+
 editor.addEventListener('input', () => {
   if (isFinished) return;
   saved = false;
@@ -155,20 +249,17 @@ runBtn.addEventListener('click', () => {
   if (isFinished) return;
   files[currentFile] = editor.value;
 
-  const lines = [];
-  const printLine = (line) => lines.push(line);
-
   try {
-    runModule('test.js', {}, printLine);
-    output.textContent = lines.length > 0 ? lines.join('\n') : 'Execution finished with no output.';
-    logIntegrity('Ran automatic checks');
+    const result = evaluateCurrentSolution();
+    output.textContent = result.lines.join('\n');
+    updateScore(result.score);
+    logIntegrity(`Ran automatic checks (${result.passed}/${result.total})`);
   } catch (error) {
     output.textContent = `❌ Runtime error\n${error.message}`;
+    updateScore(0);
     logIntegrity(`Test run failed: ${error.message}`);
   }
 });
-
-const integrityLog = document.getElementById('integrityLog');
 
 function logIntegrity(message) {
   const li = document.createElement('li');
@@ -214,7 +305,7 @@ function finishAssessment(reason) {
   const spentSeconds = initialSeconds - remainingSeconds;
   const logCount = integrityLog.querySelectorAll('li').length;
   completionSummary.textContent =
-    `Reason: ${reason}. Time used: ${formatDuration(spentSeconds)}. Integrity events: ${logCount}.`;
+    `Reason: ${reason}. Time used: ${formatDuration(spentSeconds)}. Score: ${latestScore}/10. Integrity events: ${logCount}.`;
   completionCard.hidden = false;
 
   output.textContent = `${output.textContent}\n\n✅ Assessment locked and submitted.`;
@@ -238,9 +329,10 @@ const countdown = setInterval(() => {
 
 finishBtn.addEventListener('click', () => finishAssessment('manual submit'));
 
-editor.value = files[currentFile];
 currentFileLabel.textContent = currentFile;
 renderFileList();
 renderSaveState();
 renderTutorial();
+updateScore(0);
 logIntegrity('Session started');
+initializeQuestionBank();
