@@ -157,6 +157,28 @@ body {
   margin: 0.3rem 0;
 }
 
+
+.small-label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.question-select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem;
+  margin-bottom: 0.8rem;
+  background: #fff;
+}
+
+.reference-card.compact ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
 .file-list {
   list-style: none;
   padding: 0;

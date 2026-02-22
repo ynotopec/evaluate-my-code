@@ -10,5 +10,29 @@
       { "label": "no positive numbers", "input": [0, -1, -9], "expected": 0 },
       { "label": "all positive numbers", "input": [10, 20, 30], "expected": 60 }
     ]
+  },
+  {
+    "id": "count-vowels",
+    "title": "Count vowels",
+    "prompt": "Implement countVowels(text) to return the number of vowels (a, e, i, o, u) in a string, case-insensitive.",
+    "functionName": "countVowels",
+    "starterCode": "function countVowels(text) {\n  // TODO: count all vowels (a, e, i, o, u), ignoring case.\n  return 0;\n}\n\nmodule.exports = { countVowels };\n",
+    "tests": [
+      { "label": "mixed casing", "input": "ApplE", "expected": 2 },
+      { "label": "no vowels", "input": "rhythm", "expected": 0 },
+      { "label": "sentence", "input": "Hello Interview", "expected": 5 }
+    ]
+  },
+  {
+    "id": "is-palindrome",
+    "title": "Palindrome check",
+    "prompt": "Implement isPalindrome(text) so it returns true when text reads the same forward and backward (ignore spaces and casing).",
+    "functionName": "isPalindrome",
+    "starterCode": "function isPalindrome(text) {\n  // TODO: normalize casing/spaces and check if mirrored.\n  return false;\n}\n\nmodule.exports = { isPalindrome };\n",
+    "tests": [
+      { "label": "simple palindrome", "input": "level", "expected": true },
+      { "label": "with spaces", "input": "Never odd or even", "expected": true },
+      { "label": "not palindrome", "input": "coding", "expected": false }
+    ]
   }
 ]

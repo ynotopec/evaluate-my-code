@@ -74,10 +74,20 @@
           <aside class="sidebar">
             <h3>Files</h3>
             <ul id="fileList" class="file-list"></ul>
+            <h3>Question</h3>
+            <label for="questionSelect" class="small-label">Choose challenge</label>
+            <select id="questionSelect" class="question-select"></select>
             <h3>Prompt</h3>
             <p id="promptText"></p>
             <p>The starter in <code>index.js</code> is intentionally incomplete.</p>
             <p id="questionSource">Question bank: <code>questions.json</code></p>
+            <div class="reference-card compact">
+              <h3>Session analytics</h3>
+              <ul>
+                <li id="attemptCount">Attempts: 0</li>
+                <li id="averageScore">Average score: 0/10</li>
+              </ul>
+            </div>
           </aside>
 
           <div class="editor-wrap">
