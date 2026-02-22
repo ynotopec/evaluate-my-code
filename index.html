@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,17 +13,17 @@
 
     <main id="app" class="app" hidden>
       <header class="topbar">
-        <h1>Évaluation technique — IDE candidat</h1>
+        <h1>Technical assessment — candidate IDE</h1>
         <div class="meta">
-          <span id="timer">Temps: 12:00</span>
-          <button id="finishBtn" class="primary">Terminer</button>
+          <span id="timer">Time: 12:00</span>
+          <button id="finishBtn" class="primary">Finish</button>
         </div>
       </header>
 
       <section class="progress-wrap">
         <div class="progress-head">
-          <strong>Progression</strong>
-          <span id="progressText">0 / 3 étapes</span>
+          <strong>Progress</strong>
+          <span id="progressText">0 / 3 steps</span>
         </div>
         <div class="progress-track" aria-hidden="true">
           <div id="progressBar" class="progress-bar"></div>
@@ -31,53 +31,125 @@
       </section>
 
       <nav class="tabs" role="tablist" aria-label="Modes">
-        <button class="tab active" data-tab="tutorial" role="tab">Tutoriel</button>
+        <button class="tab active" data-tab="tutorial" role="tab">Tutorial</button>
         <button class="tab" data-tab="test" role="tab">Test</button>
-        <button class="tab" data-tab="integrity" role="tab">Intégrité</button>
+        <button class="tab" data-tab="integrity" role="tab">Integrity</button>
       </nav>
 
       <section id="tutorial" class="panel active" role="tabpanel">
-        <h2>Tutoriel onboarding</h2>
+        <h2>What is screen-ide.coderpad.io?</h2>
+        <p class="lede">
+          <strong>screen-ide.coderpad.io</strong> is a web-based coding environment used by
+          <strong>CoderPad’s Screen product</strong>, part of the CoderPad technical assessment
+          platform. It works like an <strong>interactive IDE in your browser</strong> for taking
+          coding tests sent by employers.
+        </p>
+
         <p id="tutorialText"></p>
+
+        <div class="reference-card">
+          <h3>Key characteristics</h3>
+          <ul>
+            <li>Browser-based IDE optimized for desktop use.</li>
+            <li>
+              Built for asynchronous technical screening tests where candidates solve exercises on
+              their own time.
+            </li>
+            <li>
+              Includes familiar IDE capabilities such as syntax highlighting, code execution, and
+              multi-language support.
+            </li>
+            <li>
+              Contains anti-cheating and monitoring signals (for example: code playback,
+              paste/leave detection, and optional webcam snapshots).
+            </li>
+            <li>
+              Integrated with CoderPad’s wider hiring toolkit (live interview pads, question
+              library, reporting dashboards).
+            </li>
+          </ul>
+
+          <p class="refs-title">References</p>
+          <ol class="refs">
+            <li>
+              <a
+                href="https://coderpad.io/resources/docs/for-candidates/?utm_source=chatgpt.com"
+                target="_blank"
+                rel="noreferrer"
+                >Candidate preparation guides - CoderPad Docs</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://coderpad.io/resources/docs/screen/?utm_source=chatgpt.com"
+                target="_blank"
+                rel="noreferrer"
+                >Screen documentation - CoderPad Docs</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.codingame.com/work/platform/screen/?utm_source=chatgpt.com"
+                target="_blank"
+                rel="noreferrer"
+                >Technical assessments 90+ roles | CodinGame for Work</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://coderpad.io/resources/docs/screen/tests/cheating-prevention-detection/?utm_source=chatgpt.com"
+                target="_blank"
+                rel="noreferrer"
+                >Cheating prevention and detection - CoderPad Screen Docs</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://coderpad.io/platform/technical-screening/?utm_source=chatgpt.com"
+                target="_blank"
+                rel="noreferrer"
+                >Technical Screening &amp; Assessment Platform</a
+              >
+            </li>
+          </ol>
+        </div>
+
         <div class="actions">
-          <button id="prevStep" type="button">Précédent</button>
-          <button id="nextStep" type="button" class="primary">Étape suivante</button>
+          <button id="prevStep" type="button">Previous</button>
+          <button id="nextStep" type="button" class="primary">Next step</button>
         </div>
       </section>
 
       <section id="test" class="panel" role="tabpanel">
         <div class="grid">
           <aside class="sidebar">
-            <h3>Fichiers</h3>
+            <h3>Files</h3>
             <ul id="fileList" class="file-list"></ul>
-            <h3>Consigne</h3>
+            <h3>Prompt</h3>
             <p>
-              Implémenter <code>sumPositive(numbers)</code> qui retourne la somme des nombres
-              positifs du tableau.
+              Implement <code>sumPositive(numbers)</code> so it returns the sum of all positive
+              numbers in the array.
             </p>
           </aside>
 
           <div class="editor-wrap">
             <div class="editor-head">
               <strong id="currentFile">index.js</strong>
-              <span id="savedState">Non sauvegardé</span>
+              <span id="savedState">Unsaved</span>
             </div>
             <textarea id="editor" spellcheck="false"></textarea>
             <div class="actions">
-              <button id="runBtn" type="button">Exécuter</button>
-              <button id="saveBtn" type="button" class="primary">Sauvegarder</button>
+              <button id="runBtn" type="button">Run</button>
+              <button id="saveBtn" type="button" class="primary">Save</button>
             </div>
-            <pre id="output" class="output">Sortie console…</pre>
+            <pre id="output" class="output">Console output…</pre>
           </div>
         </div>
       </section>
 
       <section id="integrity" class="panel" role="tabpanel">
-        <h2>Journal intégrité (simulation)</h2>
-        <p>
-          Cette démo enregistre certains événements : collage dans l’éditeur et perte de focus de
-          la fenêtre.
-        </p>
+        <h2>Integrity log (simulation)</h2>
+        <p>This demo logs a few events: editor paste actions and browser window focus loss.</p>
         <ul id="integrityLog" class="log"></ul>
       </section>
     </main>

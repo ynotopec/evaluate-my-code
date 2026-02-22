@@ -1,10 +1,6 @@
 # Assessment welcome page mock
 
-This repository contains a static webpage that reproduces the assessment welcome flow shown in your example, including:
-- Company logo placeholder
-- Introductory instructions
-- Tutorial section details
-- Test section details
+This repository contains a static webpage that recreates a candidate coding-screen IDE flow and now includes a tutorial section explaining what `screen-ide.coderpad.io` is, with key characteristics and source links.
 
 ## Run locally
 
