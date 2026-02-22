@@ -117,6 +117,19 @@ function updateSessionAnalytics() {
 }
 
 function createVisibleTestFile(question) {
+  const language = normalizeQuestionLanguage(question.language);
+
+  if (language === 'java') {
+    const javaTests = question.tests
+      .map(
+        (test, index) =>
+          `    // Case ${index + 1}: ${test.label}\n    // input: ${JSON.stringify(test.input)}\n    // expected: ${test.expected}`,
+      )
+      .join('\n');
+
+    return `public class TestMain {\n  public static void main(String[] args) {\n${javaTests}\n  }\n}\n\n// Auto-checks are currently available only for JavaScript in this browser environment.\n// Run locally, for example:\n// javac Main.java TestMain.java && java TestMain`;
+  }
+
   if (!canEvaluateInBrowser(question)) {
     return `// Auto-check preview unavailable for ${question.language || 'this language'} in browser mode.\n// Run checks in your dedicated runtime.`;
   }
