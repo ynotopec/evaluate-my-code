@@ -1,6 +1,10 @@
-# Screen IDE-style mock webpage
+# Assessment welcome page mock
 
-This repository now contains a static webpage inspired by the requested Screen IDE layout.
+This repository contains a static webpage that reproduces the assessment welcome flow shown in your example, including:
+- Company logo placeholder
+- Introductory instructions
+- Tutorial section details
+- Test section details
 
 ## Run locally
 
