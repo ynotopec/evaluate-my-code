@@ -1,6 +1,8 @@
 [
   {
     "id": "sum-positive",
+    "level": "Easy",
+    "estimatedMinutes": 5,
     "title": "Sum positive numbers",
     "prompt": "Implement sumPositive(numbers) so it returns the sum of all positive numbers in the array.",
     "functionName": "sumPositive",
@@ -13,6 +15,8 @@
   },
   {
     "id": "count-vowels",
+    "level": "Easy",
+    "estimatedMinutes": 5,
     "title": "Count vowels",
     "prompt": "Implement countVowels(text) to return the number of vowels (a, e, i, o, u) in a string, case-insensitive.",
     "functionName": "countVowels",
@@ -25,6 +29,8 @@
   },
   {
     "id": "is-palindrome",
+    "level": "Easy",
+    "estimatedMinutes": 5,
     "title": "Palindrome check",
     "prompt": "Implement isPalindrome(text) so it returns true when text reads the same forward and backward (ignore spaces and casing).",
     "functionName": "isPalindrome",
@@ -33,6 +39,174 @@
       { "label": "simple palindrome", "input": "level", "expected": true },
       { "label": "with spaces", "input": "Never odd or even", "expected": true },
       { "label": "not palindrome", "input": "coding", "expected": false }
+    ]
+  },
+  {
+    "id": "max-consecutive-ones",
+    "level": "Easy",
+    "estimatedMinutes": 5,
+    "title": "Max consecutive ones",
+    "prompt": "Implement maxConsecutiveOnes(bits) to return the longest streak of 1 values in a binary array.",
+    "functionName": "maxConsecutiveOnes",
+    "starterCode": "function maxConsecutiveOnes(bits) {\n  // TODO: return the maximum number of consecutive 1 values.\n  return 0;\n}\n\nmodule.exports = { maxConsecutiveOnes };\n",
+    "tests": [
+      { "label": "single streak", "input": [1, 1, 0, 1], "expected": 2 },
+      { "label": "no ones", "input": [0, 0, 0], "expected": 0 },
+      { "label": "ends with streak", "input": [0, 1, 1, 1, 1], "expected": 4 }
+    ]
+  },
+  {
+    "id": "sum-multiples",
+    "level": "Easy",
+    "estimatedMinutes": 5,
+    "title": "Sum multiples of 3 or 5",
+    "prompt": "Implement sumMultiples(limit) to return the sum of all natural numbers below limit that are divisible by 3 or 5.",
+    "functionName": "sumMultiples",
+    "starterCode": "function sumMultiples(limit) {\n  // TODO: sum all numbers n where 0 <= n < limit and n is divisible by 3 or 5.\n  return 0;\n}\n\nmodule.exports = { sumMultiples };\n",
+    "tests": [
+      { "label": "limit 10", "input": 10, "expected": 23 },
+      { "label": "limit 1", "input": 1, "expected": 0 },
+      { "label": "limit 16", "input": 16, "expected": 60 }
+    ]
+  },
+  {
+    "id": "title-case",
+    "level": "Intermediate",
+    "estimatedMinutes": 7,
+    "title": "Title case a sentence",
+    "prompt": "Implement titleCase(sentence) so each word starts with an uppercase letter and the rest are lowercase.",
+    "functionName": "titleCase",
+    "starterCode": "function titleCase(sentence) {\n  // TODO: convert each word to Title Case.\n  return '';\n}\n\nmodule.exports = { titleCase };\n",
+    "tests": [
+      { "label": "basic sentence", "input": "hello world", "expected": "Hello World" },
+      { "label": "mixed casing", "input": "jAVaScRipt rocks", "expected": "Javascript Rocks" },
+      { "label": "single word", "input": "code", "expected": "Code" }
+    ]
+  },
+  {
+    "id": "first-unique-char",
+    "level": "Intermediate",
+    "estimatedMinutes": 7,
+    "title": "First unique character index",
+    "prompt": "Implement firstUniqueIndex(text) and return the index of the first character that appears only once. Return -1 if none.",
+    "functionName": "firstUniqueIndex",
+    "starterCode": "function firstUniqueIndex(text) {\n  // TODO: find the first index whose character appears exactly once.\n  return -1;\n}\n\nmodule.exports = { firstUniqueIndex };\n",
+    "tests": [
+      { "label": "found in middle", "input": "swiss", "expected": 1 },
+      { "label": "first char unique", "input": "leetcode", "expected": 0 },
+      { "label": "none unique", "input": "aabb", "expected": -1 }
+    ]
+  },
+  {
+    "id": "valid-parentheses",
+    "level": "Intermediate",
+    "estimatedMinutes": 8,
+    "title": "Validate parentheses",
+    "prompt": "Implement isValidParentheses(text) to return true if every opening bracket has a correctly ordered closing bracket. Supports (), [], and {}.",
+    "functionName": "isValidParentheses",
+    "starterCode": "function isValidParentheses(text) {\n  // TODO: validate bracket ordering and pairing.\n  return false;\n}\n\nmodule.exports = { isValidParentheses };\n",
+    "tests": [
+      { "label": "proper nesting", "input": "([{}])", "expected": true },
+      { "label": "crossed nesting", "input": "([)]", "expected": false },
+      { "label": "missing closing", "input": "(([]", "expected": false }
+    ]
+  },
+  {
+    "id": "run-length-encoding-length",
+    "level": "Intermediate",
+    "estimatedMinutes": 8,
+    "title": "Encoded length",
+    "prompt": "Implement encodedLength(text) to return the character length of a run-length encoding (e.g. 'aaabb' -> 'a3b2' length 4).",
+    "functionName": "encodedLength",
+    "starterCode": "function encodedLength(text) {\n  // TODO: compute resulting length after run-length encoding without building huge strings.\n  return 0;\n}\n\nmodule.exports = { encodedLength };\n",
+    "tests": [
+      { "label": "simple", "input": "aaabb", "expected": 4 },
+      { "label": "single chars", "input": "abcd", "expected": 8 },
+      { "label": "long run", "input": "aaaaaaaaaaa", "expected": 3 }
+    ]
+  },
+  {
+    "id": "score-logs",
+    "level": "Intermediate",
+    "estimatedMinutes": 7,
+    "title": "Highest cumulative score",
+    "prompt": "Implement peakScore(changes) to return the highest cumulative score reached while applying score deltas in order, starting from 0.",
+    "functionName": "peakScore",
+    "starterCode": "function peakScore(changes) {\n  // TODO: compute max prefix sum while iterating through changes.\n  return 0;\n}\n\nmodule.exports = { peakScore };\n",
+    "tests": [
+      { "label": "grows then drops", "input": [5, -2, 3, -10], "expected": 6 },
+      { "label": "always dropping", "input": [-1, -2, -3], "expected": 0 },
+      { "label": "steady growth", "input": [1, 1, 1, 1], "expected": 4 }
+    ]
+  },
+  {
+    "id": "meeting-room-count",
+    "level": "Advanced",
+    "estimatedMinutes": 10,
+    "title": "Minimum meeting rooms",
+    "prompt": "Implement minMeetingRooms(startsAndEnds) where each item is [start, end]. Return the minimum number of rooms needed to host all meetings.",
+    "functionName": "minMeetingRooms",
+    "starterCode": "function minMeetingRooms(startsAndEnds) {\n  // TODO: calculate the max overlap of meeting intervals.\n  return 0;\n}\n\nmodule.exports = { minMeetingRooms };\n",
+    "tests": [
+      { "label": "overlapping meetings", "input": [[0, 30], [5, 10], [15, 20]], "expected": 2 },
+      { "label": "non-overlapping", "input": [[7, 10], [10, 12], [12, 13]], "expected": 1 },
+      { "label": "heavy overlap", "input": [[1, 4], [2, 5], [3, 6], [7, 8]], "expected": 3 }
+    ]
+  },
+  {
+    "id": "min-jumps",
+    "level": "Advanced",
+    "estimatedMinutes": 10,
+    "title": "Minimum jumps to reach end",
+    "prompt": "Implement minJumps(nums). Each value indicates max jump length from that index. Return minimum jumps needed to reach last index.",
+    "functionName": "minJumps",
+    "starterCode": "function minJumps(nums) {\n  // TODO: compute minimal jumps from index 0 to the last index.\n  return 0;\n}\n\nmodule.exports = { minJumps };\n",
+    "tests": [
+      { "label": "classic case", "input": [2, 3, 1, 1, 4], "expected": 2 },
+      { "label": "already at end", "input": [0], "expected": 0 },
+      { "label": "longer array", "input": [2, 3, 0, 1, 4], "expected": 2 }
+    ]
+  },
+  {
+    "id": "longest-substring-k",
+    "level": "Advanced",
+    "estimatedMinutes": 10,
+    "title": "Longest substring with <= k distinct",
+    "prompt": "Implement longestWithKDistinct(payload) where payload is [text, k]. Return the length of the longest substring containing at most k distinct characters.",
+    "functionName": "longestWithKDistinct",
+    "starterCode": "function longestWithKDistinct(payload) {\n  const [text, k] = payload;\n  // TODO: sliding window over text using at most k distinct chars.\n  return 0;\n}\n\nmodule.exports = { longestWithKDistinct };\n",
+    "tests": [
+      { "label": "example", "input": ["eceba", 2], "expected": 3 },
+      { "label": "single distinct allowed", "input": ["aa", 1], "expected": 2 },
+      { "label": "zero distinct", "input": ["abc", 0], "expected": 0 }
+    ]
+  },
+  {
+    "id": "coin-change-min",
+    "level": "Advanced",
+    "estimatedMinutes": 10,
+    "title": "Coin change minimum",
+    "prompt": "Implement minCoins(payload) where payload is [coins, amount]. Return the minimum number of coins required, or -1 if impossible.",
+    "functionName": "minCoins",
+    "starterCode": "function minCoins(payload) {\n  const [coins, amount] = payload;\n  // TODO: dynamic programming for minimum coin count.\n  return -1;\n}\n\nmodule.exports = { minCoins };\n",
+    "tests": [
+      { "label": "possible", "input": [[1, 2, 5], 11], "expected": 3 },
+      { "label": "impossible", "input": [[2], 3], "expected": -1 },
+      { "label": "zero amount", "input": [[1, 3, 4], 0], "expected": 0 }
+    ]
+  },
+  {
+    "id": "peak-bandwidth",
+    "level": "Advanced",
+    "estimatedMinutes": 8,
+    "title": "Peak bandwidth usage",
+    "prompt": "Implement peakBandwidth(events) where each event is [start, end, load]. Return the maximum concurrent load.",
+    "functionName": "peakBandwidth",
+    "starterCode": "function peakBandwidth(events) {\n  // TODO: calculate max concurrent load over time.\n  return 0;\n}\n\nmodule.exports = { peakBandwidth };\n",
+    "tests": [
+      { "label": "basic overlap", "input": [[1, 4, 3], [2, 5, 4], [7, 9, 6]], "expected": 7 },
+      { "label": "all overlap", "input": [[0, 10, 2], [1, 9, 3], [2, 8, 5]], "expected": 10 },
+      { "label": "touching edges", "input": [[1, 3, 4], [3, 5, 6]], "expected": 6 }
     ]
   }
 ]

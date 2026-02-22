@@ -71,6 +71,7 @@ const integrityLog = document.getElementById('integrityLog');
 const questionSelect = document.getElementById('questionSelect');
 const attemptCount = document.getElementById('attemptCount');
 const averageScore = document.getElementById('averageScore');
+const questionLevel = document.getElementById('questionLevel');
 
 function updateScore(score) {
   latestScore = score;
@@ -102,6 +103,7 @@ function createVisibleTestFile(question) {
 function loadQuestion(question) {
   activeQuestion = question;
   promptText.textContent = question.prompt;
+  questionLevel.textContent = `${question.level} · ~${question.estimatedMinutes} min`;
   files = {
     'index.js': question.starterCode,
     'README.md': `# Challenge\n\n${question.prompt}\n`,
@@ -124,9 +126,18 @@ function renderQuestionSelector() {
   questions.forEach((question, index) => {
     const option = document.createElement('option');
     option.value = String(index);
-    option.textContent = `${index + 1}. ${question.title}`;
+    option.textContent = `${index + 1}. [${question.level}] ${question.title}`;
     questionSelect.appendChild(option);
   });
+}
+
+function shuffleQuestions(input) {
+  const shuffled = [...input];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 async function initializeQuestionBank() {
@@ -141,7 +152,7 @@ async function initializeQuestionBank() {
       throw new Error('Question bank is empty');
     }
 
-    questions = bank;
+    questions = shuffleQuestions(bank);
     renderQuestionSelector();
     questionSelect.value = '0';
     loadQuestion(questions[0]);
@@ -315,7 +326,7 @@ window.addEventListener('blur', () => {
   logIntegrity('Browser window blur detected');
 });
 
-let remainingSeconds = 12 * 60;
+let remainingSeconds = 90 * 60;
 const initialSeconds = remainingSeconds;
 const timer = document.getElementById('timer');
 

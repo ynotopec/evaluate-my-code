@@ -16,7 +16,7 @@
         <h1>Technical assessment — candidate IDE</h1>
         <div class="meta">
           <span id="sessionStatus" class="status-pill" aria-live="polite">Session in progress</span>
-          <span id="timer">Time: 12:00</span>
+          <span id="timer">Time: 90:00</span>
           <span id="scorePill" class="status-pill" aria-live="polite">Score: 0/10</span>
           <button id="finishBtn" class="primary">Finish</button>
         </div>
@@ -75,8 +75,9 @@
             <h3>Files</h3>
             <ul id="fileList" class="file-list"></ul>
             <h3>Question</h3>
-            <label for="questionSelect" class="small-label">Choose challenge</label>
+            <label for="questionSelect" class="small-label">Choose challenge (randomized per session)</label>
             <select id="questionSelect" class="question-select"></select>
+            <p id="questionLevel" class="small-label">Level · estimated time</p>
             <h3>Prompt</h3>
             <p id="promptText"></p>
             <p>The starter in <code>index.js</code> is intentionally incomplete.</p>
