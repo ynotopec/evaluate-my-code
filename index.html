@@ -13,12 +13,16 @@
 
     <main id="app" class="app" hidden>
       <header class="topbar">
-        <h1>Technical assessment — candidate IDE</h1>
+        <h1>Technical assessment — QCM only</h1>
         <div class="meta">
           <span id="sessionStatus" class="status-pill" aria-live="polite">Session in progress</span>
           <span id="timer">Time: 90:00</span>
+          <label class="toggle-wrap" for="noLimitMode">
+            <input id="noLimitMode" type="checkbox" />
+            No limit mode
+          </label>
           <span id="scorePill" class="status-pill" aria-live="polite">Score: 0/10</span>
-          <button id="finishBtn" class="primary">Finish</button>
+          <button id="finishBtn" class="primary">Stop & score</button>
         </div>
       </header>
 
@@ -44,25 +48,9 @@
       </nav>
 
       <section id="tutorial" class="panel active" role="tabpanel">
-        <h2>Online coding assessment workspace</h2>
-        <p class="lede">
-          This web app helps companies run online coding tests. Candidates can write and run code
-          directly in the browser, solve technical tasks, and complete an assessment with a time
-          limit.
-        </p>
-
+        <h2>Online QCM assessment workspace</h2>
+        <p class="lede">Questions are randomized with equal distribution between SQL, Java, Angular, TypeScript and Spring Framework.</p>
         <p id="tutorialText"></p>
-
-        <div class="reference-card">
-          <h3>Key characteristics</h3>
-          <ul>
-            <li>Browser-based editor with no local setup required.</li>
-            <li>Coding prompt + runnable tests for automatic checking.</li>
-            <li>Countdown timer and explicit assessment submission flow.</li>
-            <li>Candidate activity logging to support evaluation integrity.</li>
-          </ul>
-        </div>
-
         <div class="actions">
           <button id="prevStep" type="button">Previous</button>
           <button id="nextStep" type="button" class="primary">Next step</button>
@@ -72,44 +60,34 @@
       <section id="test" class="panel" role="tabpanel">
         <div class="grid">
           <aside class="sidebar">
-            <h3>Files</h3>
-            <ul id="fileList" class="file-list"></ul>
             <h3>Question</h3>
-            <label for="questionSelect" class="small-label">Choose challenge (randomized per session)</label>
-            <select id="questionSelect" class="question-select"></select>
             <p id="questionLevel" class="small-label">Level · estimated time</p>
-            <p id="questionLanguage" class="small-label">Language: JavaScript</p>
-            <h3>Prompt</h3>
-            <p id="promptText"></p>
-            <p>The starter in <code>index.js</code> is intentionally incomplete.</p>
-            <p id="questionSource">Question bank: <code>questions.json</code></p>
+            <p id="questionLanguage" class="small-label">Theme</p>
             <div class="reference-card compact">
               <h3>Session analytics</h3>
               <ul>
                 <li id="attemptCount">Attempts: 0</li>
                 <li id="averageScore">Average score: 0/10</li>
+                <li id="scoringMethod">Scoring: weighted average (difficulty + time)</li>
+                <li id="themeDistribution">Distribution: SQL 0 · Java 0 · Angular 0 · TypeScript 0 · Spring Framework 0</li>
               </ul>
             </div>
           </aside>
 
           <div class="editor-wrap">
-            <div class="editor-head">
-              <strong id="currentFile">index.js</strong>
-              <span id="savedState">Unsaved</span>
-            </div>
-            <textarea id="editor" spellcheck="false"></textarea>
+            <h3 id="promptText"></h3>
+            <form id="qcmForm" class="qcm-form"></form>
             <div class="actions">
-              <button id="runBtn" type="button">Run</button>
-              <button id="saveBtn" type="button" class="primary">Save</button>
+              <button id="submitAnswerBtn" type="button" class="primary">Submit answer</button>
+              <button id="nextQuestionBtn" type="button">Next random question</button>
             </div>
-            <pre id="output" class="output">Console output…</pre>
+            <pre id="output" class="output">Choose one answer, then submit.</pre>
           </div>
         </div>
       </section>
 
       <section id="integrity" class="panel" role="tabpanel">
         <h2>Integrity log</h2>
-        <p>This environment logs a few events: editor paste actions and browser window focus loss.</p>
         <ul id="integrityLog" class="log"></ul>
       </section>
     </main>

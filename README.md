@@ -1,13 +1,14 @@
 # Assessment welcome page
 
-This repository contains a static webpage for an online coding assessment flow where candidates can:
+This repository contains a static webpage for an online technical assessment flow in **QCM-only mode** (multiple-choice questions).
 
-- write and run code directly in the browser,
-- solve randomized coding prompts loaded from a local question bank (`questions.json`),
+Candidates can:
+
+- answer randomized QCM questions loaded from a local question bank (`questions.json`),
 - complete the assessment within a 1h30 time limit,
-- get an application score out of 10 based on passing checks across easy/intermediate/advanced challenges,
+- get an application score out of 10,
 - generate integrity events used for evaluation,
-- track attempts and average scores across multiple challenges.
+- track attempts and average scores across multiple questions.
 
 ## Run locally
 

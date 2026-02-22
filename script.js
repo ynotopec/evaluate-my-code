@@ -5,26 +5,19 @@ const tabs = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.panel');
 
 function activateTab(tabId) {
-  tabs.forEach((tab) => {
-    const isActive = tab.dataset.tab === tabId;
-    tab.classList.toggle('active', isActive);
-  });
-
-  panels.forEach((panel) => {
-    panel.classList.toggle('active', panel.id === tabId);
-  });
+  tabs.forEach((tab) => tab.classList.toggle('active', tab.dataset.tab === tabId));
+  panels.forEach((panel) => panel.classList.toggle('active', panel.id === tabId));
 }
 
-tabs.forEach((tab) => {
-  tab.addEventListener('click', () => activateTab(tab.dataset.tab));
-});
+tabs.forEach((tab) => tab.addEventListener('click', () => activateTab(tab.dataset.tab)));
 
 const tutorialSteps = [
-  'Step 1/3 — Review the environment and get comfortable with the interface.',
-  'Step 2/3 — Try the editor: write code, save it, and run the automatic checks.',
-  'Step 3/3 — Submit before the timer ends.',
+  'Step 1/3 — Read instructions and understand the interface.',
+  'Step 2/3 — Questions are random with equal rotation for SQL / Java / Angular / TypeScript / Spring Framework.',
+  'Step 3/3 — Enable no limit mode for an unlimited session and stop manually to see your score.',
 ];
 let tutorialIndex = 0;
+
 const tutorialText = document.getElementById('tutorialText');
 const progressText = document.getElementById('progressText');
 const progressBar = document.getElementById('progressBar');
@@ -45,59 +38,70 @@ document.getElementById('nextStep').addEventListener('click', () => {
   renderTutorial();
 });
 
-let files = {};
-let activeQuestion = null;
-let activeQuestionLanguage = 'javascript';
-let latestScore = 0;
-let questions = [];
-let scoreHistory = [];
-
-let currentFile = 'index.js';
-let saved = true;
+const THEMES = ['SQL', 'Java', 'Angular', 'TypeScript', 'Spring Framework'];
+let questionsByTheme = new Map();
 let isFinished = false;
-const fileList = document.getElementById('fileList');
-const editor = document.getElementById('editor');
-const currentFileLabel = document.getElementById('currentFile');
-const savedState = document.getElementById('savedState');
-const output = document.getElementById('output');
+let activeQuestion = null;
+let latestScore = 0;
+let scoreHistory = [];
+let hasAnsweredCurrentQuestion = false;
+let noLimitEnabled = false;
+let themePointer = 0;
+let themeOrder = [];
+let usedQuestionsByTheme = new Map();
+let themeDrawCounts = new Map(THEMES.map((theme) => [theme, 0]));
+let lastQuestionIdByTheme = new Map();
+
 const finishBtn = document.getElementById('finishBtn');
-const runBtn = document.getElementById('runBtn');
-const saveBtn = document.getElementById('saveBtn');
 const sessionStatus = document.getElementById('sessionStatus');
 const completionCard = document.getElementById('completionCard');
 const completionSummary = document.getElementById('completionSummary');
 const promptText = document.getElementById('promptText');
 const scorePill = document.getElementById('scorePill');
 const integrityLog = document.getElementById('integrityLog');
-const questionSelect = document.getElementById('questionSelect');
 const attemptCount = document.getElementById('attemptCount');
 const averageScore = document.getElementById('averageScore');
+const themeDistribution = document.getElementById('themeDistribution');
+const scoringMethod = document.getElementById('scoringMethod');
 const questionLevel = document.getElementById('questionLevel');
 const questionLanguage = document.getElementById('questionLanguage');
+const qcmForm = document.getElementById('qcmForm');
+const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+const output = document.getElementById('output');
+const noLimitMode = document.getElementById('noLimitMode');
 
-function normalizeQuestionLanguage(language) {
-  if (!language) return 'javascript';
-  return String(language).trim().toLowerCase();
+function shuffle(values) {
+  const copy = [...values];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
 
-function getQuestionFileName(question) {
-  if (question.starterFile) return question.starterFile;
+function getQuestionWeight(question) {
+  const levelWeights = {
+    Beginner: 0.8,
+    Intermediate: 1,
+    Advanced: 1.2,
+    Expert: 1.4,
+  };
 
-  const language = normalizeQuestionLanguage(question.language);
-  if (language === 'java') return 'Main.java';
-  return 'index.js';
+  const levelWeight = levelWeights[question.level] || 1;
+  const timeWeight = Math.max(1, Number(question.estimatedMinutes) || 1) / 2;
+
+  return levelWeight * timeWeight;
 }
 
-function getQuestionTestFileName(question) {
-  if (question.testFile) return question.testFile;
+function computeAverageScore() {
+  if (scoreHistory.length === 0) return 0;
 
-  const language = normalizeQuestionLanguage(question.language);
-  if (language === 'java') return 'TestMain.java';
-  return 'test.js';
-}
+  const weightedPoints = scoreHistory.reduce((acc, attempt) => acc + attempt.score * attempt.weight, 0);
+  const totalWeight = scoreHistory.reduce((acc, attempt) => acc + attempt.weight, 0);
 
-function canEvaluateInBrowser(question) {
-  return normalizeQuestionLanguage(question.language) === 'javascript';
+  if (totalWeight === 0) return 0;
+  return Math.round((weightedPoints / totalWeight) * 10) / 10;
 }
 
 function updateScore(score) {
@@ -107,124 +111,141 @@ function updateScore(score) {
 
 function updateSessionAnalytics() {
   const attempts = scoreHistory.length;
-  const average =
-    attempts === 0
-      ? 0
-      : Math.round((scoreHistory.reduce((total, item) => total + item.score, 0) / attempts) * 10) / 10;
+  const average = computeAverageScore();
 
   attemptCount.textContent = `Attempts: ${attempts}`;
   averageScore.textContent = `Average score: ${average}/10`;
+  scoringMethod.textContent = 'Scoring: weighted average (difficulty + estimated time)';
+  themeDistribution.textContent = `Distribution: ${THEMES.map((theme) => `${theme} ${themeDrawCounts.get(theme)}`).join(' · ')}`;
 }
 
-function createVisibleTestFile(question) {
-  const language = normalizeQuestionLanguage(question.language);
-
-  if (language === 'java') {
-    const javaTests = question.tests
-      .map(
-        (test, index) =>
-          `    // Case ${index + 1}: ${test.label}\n    // input: ${JSON.stringify(test.input)}\n    // expected: ${test.expected}`,
-      )
-      .join('\n');
-
-    return `public class TestMain {\n  public static void main(String[] args) {\n${javaTests}\n  }\n}\n\n// Auto-checks are currently available only for JavaScript in this browser environment.\n// Run locally, for example:\n// javac Main.java TestMain.java && java TestMain`;
-  }
-
-  if (!canEvaluateInBrowser(question)) {
-    return `// Auto-check preview unavailable for ${question.language || 'this language'} in browser mode.\n// Run checks in your dedicated runtime.`;
-  }
-
-  const cases = question.tests
-    .map(
-      (test) =>
-        `assertEqual(${question.functionName}(${JSON.stringify(test.input)}), ${test.expected}, '${test.label}');`,
-    )
-    .join('\n');
-
-  return `const { ${question.functionName} } = require('./index');\n\nfunction assertEqual(actual, expected, label) {\n  if (actual !== expected) {\n    throw new Error(\`${'${label}'}: expected ${'${expected}'}, got ${'${actual}'}\`);\n  }\n}\n\n${cases}\n\nconsole.log('✅ ${question.tests.length}/${question.tests.length} tests passed');\n`;
+function logIntegrity(message) {
+  const li = document.createElement('li');
+  li.textContent = `${new Date().toLocaleTimeString()} — ${message}`;
+  integrityLog.prepend(li);
 }
 
-function loadQuestion(question) {
-  activeQuestion = question;
-  activeQuestionLanguage = normalizeQuestionLanguage(question.language);
-  promptText.textContent = question.prompt;
-  questionLevel.textContent = `${question.level} · ~${question.estimatedMinutes} min`;
-  questionLanguage.textContent = `Language: ${activeQuestionLanguage}`;
-  const starterFile = getQuestionFileName(question);
-  const testFile = getQuestionTestFileName(question);
+function renderQcmOptions(question) {
+  qcmForm.innerHTML = '';
+  question.options.forEach((choice, index) => {
+    const label = document.createElement('label');
+    label.className = 'qcm-option';
 
-  files = {
-    [starterFile]: question.starterCode,
-    'README.md': `# Challenge\n\n${question.prompt}\n`,
-    [testFile]: createVisibleTestFile(question),
-  };
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'qcmChoice';
+    radio.value = String(index);
+    radio.disabled = isFinished;
 
-  currentFile = starterFile;
-  editor.value = files[currentFile];
-  currentFileLabel.textContent = currentFile;
-  saved = true;
-  renderSaveState();
-  renderFileList();
-  output.textContent = 'Console output…';
-  updateScore(0);
-  runBtn.disabled = !canEvaluateInBrowser(question);
+    const text = document.createElement('span');
+    text.textContent = choice;
 
-  if (!canEvaluateInBrowser(question)) {
-    output.textContent = `⚠️ Auto-checks are currently available only for JavaScript. Loaded language: ${activeQuestionLanguage}.`;
-  }
-
-  logIntegrity(`Loaded question: ${question.id}`);
-}
-
-function renderQuestionSelector() {
-  questionSelect.innerHTML = '';
-  questions.forEach((question, index) => {
-    const option = document.createElement('option');
-    option.value = String(index);
-    option.textContent = `${index + 1}. [${question.level}] ${question.title}`;
-    questionSelect.appendChild(option);
+    label.appendChild(radio);
+    label.appendChild(text);
+    qcmForm.appendChild(label);
   });
 }
 
-function shuffleQuestions(input) {
-  const shuffled = [...input];
-  for (let i = shuffled.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+function prepareQuestionForDisplay(question) {
+  const indexedOptions = question.options.map((text, index) => ({ text, index }));
+  const shuffledOptions = shuffle(indexedOptions);
+  const remappedCorrectIndex = shuffledOptions.findIndex(
+    (option) => option.index === question.correctOptionIndex,
+  );
+
+  return {
+    ...question,
+    options: shuffledOptions.map((option) => option.text),
+    correctOptionIndex: remappedCorrectIndex,
+  };
 }
 
-const servedQuestionsStorageKey = 'assessment-served-questions';
-
-function getServedQuestionIds() {
-  try {
-    const raw = localStorage.getItem(servedQuestionsStorageKey);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+function loadQuestion(question) {
+  activeQuestion = prepareQuestionForDisplay(question);
+  promptText.textContent = question.prompt;
+  questionLevel.textContent = `${activeQuestion.level} · ~${activeQuestion.estimatedMinutes} min`;
+  questionLanguage.textContent = `Theme: ${activeQuestion.theme}`;
+  renderQcmOptions(activeQuestion);
+  output.textContent = 'Choose one answer, then submit.';
+  hasAnsweredCurrentQuestion = false;
+  submitAnswerBtn.disabled = false;
+  updateScore(0);
+  logIntegrity(`Loaded QCM question: ${activeQuestion.id} (${activeQuestion.theme})`);
 }
 
-function setServedQuestionIds(ids) {
-  localStorage.setItem(servedQuestionsStorageKey, JSON.stringify(ids));
-}
-
-function arrangeQuestionOrder(bank) {
-  const servedIds = getServedQuestionIds();
-  const unseen = bank.filter((question) => !servedIds.includes(question.id));
-  const seen = bank.filter((question) => servedIds.includes(question.id));
-
-  if (unseen.length === 0) {
-    const reshuffled = shuffleQuestions(bank);
-    setServedQuestionIds([reshuffled[0].id]);
-    return reshuffled;
+function nextTheme() {
+  if (themeOrder.length === 0 || themePointer >= themeOrder.length) {
+    themeOrder = shuffle(THEMES);
+    themePointer = 0;
   }
 
-  const ordered = [...shuffleQuestions(unseen), ...shuffleQuestions(seen)];
-  setServedQuestionIds([...servedIds, ordered[0].id]);
-  return ordered;
+  const theme = themeOrder[themePointer];
+  themePointer += 1;
+  return theme;
+}
+
+function pickQuestionForTheme(theme) {
+  const bank = questionsByTheme.get(theme) || [];
+  if (bank.length === 0) return null;
+
+  const used = usedQuestionsByTheme.get(theme) || new Set();
+  const unused = bank.filter((item) => !used.has(item.id));
+  let source = unused.length > 0 ? unused : bank;
+
+  if (unused.length === 0 && source.length > 1) {
+    const lastQuestionId = lastQuestionIdByTheme.get(theme);
+    const withoutLastQuestion = source.filter((item) => item.id !== lastQuestionId);
+    if (withoutLastQuestion.length > 0) {
+      source = withoutLastQuestion;
+    }
+  }
+
+  const selected = source[Math.floor(Math.random() * source.length)];
+  if (!unused.length) {
+    used.clear();
+  }
+  used.add(selected.id);
+  lastQuestionIdByTheme.set(theme, selected.id);
+  usedQuestionsByTheme.set(theme, used);
+  themeDrawCounts.set(theme, (themeDrawCounts.get(theme) || 0) + 1);
+  return selected;
+}
+
+function loadNextRandomQuestion() {
+  if (isFinished) return;
+
+  const theme = nextTheme();
+  const question = pickQuestionForTheme(theme);
+
+  if (!question) {
+    output.textContent = `⚠️ No question found for theme ${theme}`;
+    return;
+  }
+
+  loadQuestion(question);
+  updateSessionAnalytics();
+}
+
+function evaluateCurrentAnswer() {
+  if (!activeQuestion) {
+    throw new Error('No active QCM question loaded');
+  }
+
+  const selection = qcmForm.querySelector('input[name="qcmChoice"]:checked');
+  if (!selection) {
+    throw new Error('Please select an answer before submitting.');
+  }
+
+  const selectedIndex = Number(selection.value);
+  const isCorrect = selectedIndex === activeQuestion.correctOptionIndex;
+  const score = isCorrect ? 10 : 0;
+
+  return {
+    isCorrect,
+    score,
+    correctIndex: activeQuestion.correctOptionIndex,
+    weight: getQuestionWeight(activeQuestion),
+  };
 }
 
 async function initializeQuestionBank() {
@@ -235,186 +256,69 @@ async function initializeQuestionBank() {
     }
 
     const bank = await response.json();
-    if (!Array.isArray(bank) || bank.length === 0) {
-      throw new Error('Question bank is empty');
+    const qcmOnly = Array.isArray(bank)
+      ? bank.filter(
+          (item) =>
+            item.type === 'qcm' &&
+            THEMES.includes(item.theme) &&
+            Array.isArray(item.options) &&
+            item.options.length >= 2,
+        )
+      : [];
+
+    questionsByTheme = new Map(THEMES.map((theme) => [theme, qcmOnly.filter((item) => item.theme === theme)]));
+
+    const missing = THEMES.filter((theme) => (questionsByTheme.get(theme) || []).length === 0);
+    if (missing.length > 0) {
+      throw new Error(`Missing themes in question bank: ${missing.join(', ')}`);
     }
 
-    questions = arrangeQuestionOrder(bank);
-    renderQuestionSelector();
-    questionSelect.value = '0';
-    loadQuestion(questions[0]);
+    usedQuestionsByTheme = new Map(THEMES.map((theme) => [theme, new Set()]));
+    lastQuestionIdByTheme = new Map();
+    loadNextRandomQuestion();
   } catch (error) {
     output.textContent = `❌ Setup error\n${error.message}`;
-    runBtn.disabled = true;
-    saveBtn.disabled = true;
+    submitAnswerBtn.disabled = true;
+    nextQuestionBtn.disabled = true;
     logIntegrity(`Question bank load failed: ${error.message}`);
   }
 }
 
-questionSelect.addEventListener('change', () => {
+submitAnswerBtn.addEventListener('click', () => {
   if (isFinished) return;
-  const selectedIndex = Number(questionSelect.value);
-  const question = questions[selectedIndex];
-  if (!question) return;
-
-  loadQuestion(question);
-});
-
-function renderFileList() {
-  fileList.innerHTML = '';
-  Object.keys(files).forEach((fileName) => {
-    const li = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = `file-btn ${fileName === currentFile ? 'active' : ''}`;
-    btn.textContent = fileName;
-    btn.disabled = isFinished;
-    btn.addEventListener('click', () => {
-      if (isFinished) return;
-      files[currentFile] = editor.value;
-      currentFile = fileName;
-      logIntegrity(`Switched file to ${fileName}`);
-      currentFileLabel.textContent = currentFile;
-      editor.value = files[currentFile];
-      saved = true;
-      renderSaveState();
-      renderFileList();
-    });
-    li.appendChild(btn);
-    fileList.appendChild(li);
-  });
-}
-
-function renderSaveState() {
-  savedState.textContent = saved ? 'Saved' : 'Unsaved';
-}
-
-function normalizeModuleName(moduleName) {
-  if (moduleName === './index') {
-    return 'index.js';
+  if (hasAnsweredCurrentQuestion) {
+    output.textContent = '⚠️ This question has already been submitted. Load the next one to continue.';
+    return;
   }
-
-  if (moduleName.endsWith('.js')) {
-    return moduleName.replace('./', '');
-  }
-
-  return `${moduleName.replace('./', '')}.js`;
-}
-
-function runModule(fileName, cache, printLine) {
-  if (cache[fileName]) {
-    return cache[fileName].exports;
-  }
-
-  const source = files[fileName];
-  if (typeof source !== 'string') {
-    throw new Error(`Missing file: ${fileName}`);
-  }
-
-  const module = { exports: {} };
-  cache[fileName] = module;
-
-  const localRequire = (moduleName) => {
-    const normalized = normalizeModuleName(moduleName);
-    if (!(normalized in files)) {
-      throw new Error(`Cannot find module '${moduleName}'`);
-    }
-    return runModule(normalized, cache, printLine);
-  };
-
-  const localConsole = {
-    log: (...args) => printLine(args.map(String).join(' ')),
-  };
-
-  const evaluator = new Function('require', 'module', 'exports', 'console', source);
-  evaluator(localRequire, module, module.exports, localConsole);
-  return module.exports;
-}
-
-function deepCloneValue(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-function evaluateCurrentSolution() {
-  const lines = [];
-  const printLine = (line) => lines.push(line);
-
-  if (!activeQuestion) {
-    throw new Error('No active question loaded');
-  }
-
-  if (!canEvaluateInBrowser(activeQuestion)) {
-    throw new Error(
-      `Cannot run automatic checks in-browser for language '${activeQuestionLanguage}'.`,
-    );
-  }
-
-  const exported = runModule(getQuestionFileName(activeQuestion), {}, printLine);
-
-  const candidateFn = exported[activeQuestion.functionName];
-  if (typeof candidateFn !== 'function') {
-    throw new Error(`Expected exported function '${activeQuestion.functionName}'`);
-  }
-
-  let passed = 0;
-  activeQuestion.tests.forEach((test) => {
-    const actual = candidateFn(deepCloneValue(test.input));
-    if (actual === test.expected) {
-      passed += 1;
-      lines.push(`✅ ${test.label}`);
-      return;
-    }
-    lines.push(`❌ ${test.label}: expected ${test.expected}, got ${actual}`);
-  });
-
-  const score = Math.round((passed / activeQuestion.tests.length) * 10);
-  lines.push(`\nResult: ${passed}/${activeQuestion.tests.length} tests passed`);
-  lines.push(`Application score: ${score}/10`);
-
-  return { lines, score, passed, total: activeQuestion.tests.length };
-}
-
-editor.addEventListener('input', () => {
-  if (isFinished) return;
-  saved = false;
-  renderSaveState();
-});
-
-saveBtn.addEventListener('click', () => {
-  if (isFinished) return;
-  files[currentFile] = editor.value;
-  saved = true;
-  renderSaveState();
-  logIntegrity(`Saved ${currentFile}`);
-});
-
-runBtn.addEventListener('click', () => {
-  if (isFinished) return;
-  files[currentFile] = editor.value;
 
   try {
-    const result = evaluateCurrentSolution();
-    output.textContent = result.lines.join('\n');
+    const result = evaluateCurrentAnswer();
     updateScore(result.score);
-    scoreHistory.push({ questionId: activeQuestion.id, score: result.score });
+    scoreHistory.push({
+      questionId: activeQuestion.id,
+      score: result.score,
+      theme: activeQuestion.theme,
+      weight: result.weight,
+    });
+    hasAnsweredCurrentQuestion = true;
+    submitAnswerBtn.disabled = true;
     updateSessionAnalytics();
-    logIntegrity(`Ran automatic checks (${result.passed}/${result.total})`);
+
+    if (result.isCorrect) {
+      output.textContent = '✅ Correct answer. +10 points';
+    } else {
+      output.textContent = `❌ Incorrect answer. Correct option: ${activeQuestion.options[result.correctIndex]}`;
+    }
+
+    logIntegrity(
+      `Submitted QCM answer (${result.isCorrect ? 'correct' : 'incorrect'}) for question ${activeQuestion.id}`,
+    );
   } catch (error) {
-    output.textContent = `❌ Runtime error\n${error.message}`;
-    updateScore(0);
-    logIntegrity(`Test run failed: ${error.message}`);
+    output.textContent = `⚠️ ${error.message}`;
   }
 });
 
-function logIntegrity(message) {
-  const li = document.createElement('li');
-  li.textContent = `${new Date().toLocaleTimeString()} — ${message}`;
-  integrityLog.prepend(li);
-}
-
-editor.addEventListener('paste', () => {
-  logIntegrity('Paste detected in the editor');
-});
+nextQuestionBtn.addEventListener('click', loadNextRandomQuestion);
 
 window.addEventListener('blur', () => {
   logIntegrity('Browser window blur detected');
@@ -434,23 +338,27 @@ function finishAssessment(reason) {
   if (isFinished) return;
 
   isFinished = true;
-  files[currentFile] = editor.value;
-  saved = true;
-  renderSaveState();
-
-  editor.disabled = true;
-  runBtn.disabled = true;
-  saveBtn.disabled = true;
+  submitAnswerBtn.disabled = true;
+  nextQuestionBtn.disabled = true;
   finishBtn.disabled = true;
-  renderFileList();
+  noLimitMode.disabled = true;
+
+  qcmForm.querySelectorAll('input[type="radio"]').forEach((input) => {
+    input.disabled = true;
+  });
 
   sessionStatus.textContent = 'Submitted';
   sessionStatus.classList.add('done');
 
-  const spentSeconds = initialSeconds - remainingSeconds;
+  const spentSeconds = noLimitEnabled ? null : initialSeconds - remainingSeconds;
   const logCount = integrityLog.querySelectorAll('li').length;
+  const attempts = scoreHistory.length;
+  const average = computeAverageScore();
+
   completionSummary.textContent =
-    `Reason: ${reason}. Time used: ${formatDuration(spentSeconds)}. Score: ${latestScore}/10. Integrity events: ${logCount}.`;
+    `Reason: ${reason}. ` +
+    `${noLimitEnabled ? 'Time used: unlimited mode.' : `Time used: ${formatDuration(spentSeconds)}.`} ` +
+    `Final average score: ${average}/10 over ${attempts} attempts. Integrity events: ${logCount}.`;
   completionCard.hidden = false;
 
   output.textContent = `${output.textContent}\n\n✅ Assessment locked and submitted.`;
@@ -464,6 +372,11 @@ const countdown = setInterval(() => {
     return;
   }
 
+  if (noLimitEnabled) {
+    timer.textContent = 'Time: ∞ (no limit)';
+    return;
+  }
+
   remainingSeconds = Math.max(0, remainingSeconds - 1);
   timer.textContent = `Time: ${formatDuration(remainingSeconds)}`;
 
@@ -472,13 +385,17 @@ const countdown = setInterval(() => {
   }
 }, 1000);
 
-finishBtn.addEventListener('click', () => finishAssessment('manual submit'));
+noLimitMode.addEventListener('change', () => {
+  if (isFinished) return;
+  noLimitEnabled = noLimitMode.checked;
+  timer.textContent = noLimitEnabled ? 'Time: ∞ (no limit)' : `Time: ${formatDuration(remainingSeconds)}`;
+  logIntegrity(`No limit mode ${noLimitEnabled ? 'enabled' : 'disabled'}`);
+});
 
-currentFileLabel.textContent = currentFile;
-renderFileList();
-renderSaveState();
+finishBtn.addEventListener('click', () => finishAssessment('manual stop'));
+
 renderTutorial();
 updateScore(0);
 updateSessionAnalytics();
-logIntegrity('Session started');
+logIntegrity('Session started (balanced random QCM mode)');
 initializeQuestionBank();
