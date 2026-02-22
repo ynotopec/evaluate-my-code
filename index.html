@@ -1,41 +1,87 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assessment Welcome</title>
+    <title>Mock Screen IDE</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="page">
-      <section class="card">
-        <div class="logo">Company logo</div>
+    <noscript>
+      <div class="noscript">You need to enable JavaScript to run this app.</div>
+    </noscript>
 
-        <h1>Welcome. You've been invited to take a test.</h1>
+    <main id="app" class="app" hidden>
+      <header class="topbar">
+        <h1>Évaluation technique — IDE candidat</h1>
+        <div class="meta">
+          <span id="timer">Temps: 12:00</span>
+          <button id="finishBtn" class="primary">Terminer</button>
+        </div>
+      </header>
 
-        <p>To have a great experience:</p>
-        <ul>
-          <li>Take our tutorial first so you feel comfortable and perform your best.</li>
-          <li>Customize the environment at any time during the tutorial or test.</li>
-        </ul>
+      <section class="progress-wrap">
+        <div class="progress-head">
+          <strong>Progression</strong>
+          <span id="progressText">0 / 3 étapes</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </section>
 
-        <p class="notice">You must complete this test on your own.</p>
+      <nav class="tabs" role="tablist" aria-label="Modes">
+        <button class="tab active" data-tab="tutorial" role="tab">Tutoriel</button>
+        <button class="tab" data-tab="test" role="tab">Test</button>
+        <button class="tab" data-tab="integrity" role="tab">Intégrité</button>
+      </nav>
 
-        <section class="section-block">
-          <h2>Tutorial</h2>
-          <p>
-            Use this tutorial to get comfortable with the assessment environment. You can
-            take it as many times as you want. It only takes a few minutes.
-          </p>
-          <p>This tutorial is not part of your assessment and won’t affect your results.</p>
-        </section>
+      <section id="tutorial" class="panel active" role="tabpanel">
+        <h2>Tutoriel onboarding</h2>
+        <p id="tutorialText"></p>
+        <div class="actions">
+          <button id="prevStep" type="button">Précédent</button>
+          <button id="nextStep" type="button" class="primary">Étape suivante</button>
+        </div>
+      </section>
 
-        <section class="section-block">
-          <h2>Test</h2>
-          <p>There is 1 question in this test. The test usually takes between 6 and 12 minutes.</p>
-          <p>Please reserve 12 minutes to take this test.</p>
-        </section>
+      <section id="test" class="panel" role="tabpanel">
+        <div class="grid">
+          <aside class="sidebar">
+            <h3>Fichiers</h3>
+            <ul id="fileList" class="file-list"></ul>
+            <h3>Consigne</h3>
+            <p>
+              Implémenter <code>sumPositive(numbers)</code> qui retourne la somme des nombres
+              positifs du tableau.
+            </p>
+          </aside>
+
+          <div class="editor-wrap">
+            <div class="editor-head">
+              <strong id="currentFile">index.js</strong>
+              <span id="savedState">Non sauvegardé</span>
+            </div>
+            <textarea id="editor" spellcheck="false"></textarea>
+            <div class="actions">
+              <button id="runBtn" type="button">Exécuter</button>
+              <button id="saveBtn" type="button" class="primary">Sauvegarder</button>
+            </div>
+            <pre id="output" class="output">Sortie console…</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="integrity" class="panel" role="tabpanel">
+        <h2>Journal intégrité (simulation)</h2>
+        <p>
+          Cette démo enregistre certains événements : collage dans l’éditeur et perte de focus de
+          la fenêtre.
+        </p>
+        <ul id="integrityLog" class="log"></ul>
       </section>
     </main>
+
+    <script src="script.js"></script>
   </body>
 </html>
