@@ -17,8 +17,12 @@
         <div class="meta">
           <span id="sessionStatus" class="status-pill" aria-live="polite">Session in progress</span>
           <span id="timer">Time: 90:00</span>
+          <label class="toggle-wrap" for="noLimitMode">
+            <input id="noLimitMode" type="checkbox" />
+            No limit mode
+          </label>
           <span id="scorePill" class="status-pill" aria-live="polite">Score: 0/10</span>
-          <button id="finishBtn" class="primary">Finish</button>
+          <button id="finishBtn" class="primary">Stop & score</button>
         </div>
       </header>
 
@@ -45,7 +49,7 @@
 
       <section id="tutorial" class="panel active" role="tabpanel">
         <h2>Online QCM assessment workspace</h2>
-        <p class="lede">This session accepts only QCM (multiple-choice questions).</p>
+        <p class="lede">Questions are randomized with equal distribution between SQL, Java, Angular, TypeScript and Spring Framework.</p>
         <p id="tutorialText"></p>
         <div class="actions">
           <button id="prevStep" type="button">Previous</button>
@@ -57,15 +61,14 @@
         <div class="grid">
           <aside class="sidebar">
             <h3>Question</h3>
-            <label for="questionSelect" class="small-label">Choose QCM question</label>
-            <select id="questionSelect" class="question-select"></select>
             <p id="questionLevel" class="small-label">Level · estimated time</p>
-            <p id="questionLanguage" class="small-label">Type: QCM</p>
+            <p id="questionLanguage" class="small-label">Theme</p>
             <div class="reference-card compact">
               <h3>Session analytics</h3>
               <ul>
                 <li id="attemptCount">Attempts: 0</li>
                 <li id="averageScore">Average score: 0/10</li>
+                <li id="themeDistribution">Distribution: SQL 0 · Java 0 · Angular 0 · TypeScript 0 · Spring Framework 0</li>
               </ul>
             </div>
           </aside>
@@ -75,6 +78,7 @@
             <form id="qcmForm" class="qcm-form"></form>
             <div class="actions">
               <button id="submitAnswerBtn" type="button" class="primary">Submit answer</button>
+              <button id="nextQuestionBtn" type="button">Next random question</button>
             </div>
             <pre id="output" class="output">Choose one answer, then submit.</pre>
           </div>

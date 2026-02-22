@@ -13,8 +13,8 @@ tabs.forEach((tab) => tab.addEventListener('click', () => activateTab(tab.datase
 
 const tutorialSteps = [
   'Step 1/3 — Read instructions and understand the interface.',
-  'Step 2/3 — Answer QCM questions by selecting one option.',
-  'Step 3/3 — Submit before the timer ends.',
+  'Step 2/3 — Questions are random with equal rotation for SQL / Java / Angular / TypeScript / Spring Framework.',
+  'Step 3/3 — Enable no limit mode for an unlimited session and stop manually to see your score.',
 ];
 let tutorialIndex = 0;
 
@@ -38,11 +38,17 @@ document.getElementById('nextStep').addEventListener('click', () => {
   renderTutorial();
 });
 
-let questions = [];
+const THEMES = ['SQL', 'Java', 'Angular', 'TypeScript', 'Spring Framework'];
+let questionsByTheme = new Map();
+let isFinished = false;
 let activeQuestion = null;
 let latestScore = 0;
 let scoreHistory = [];
-let isFinished = false;
+let noLimitEnabled = false;
+let themePointer = 0;
+let themeOrder = [];
+let usedQuestionsByTheme = new Map();
+let themeDrawCounts = new Map(THEMES.map((theme) => [theme, 0]));
 
 const finishBtn = document.getElementById('finishBtn');
 const sessionStatus = document.getElementById('sessionStatus');
@@ -51,13 +57,25 @@ const completionSummary = document.getElementById('completionSummary');
 const promptText = document.getElementById('promptText');
 const scorePill = document.getElementById('scorePill');
 const integrityLog = document.getElementById('integrityLog');
-const questionSelect = document.getElementById('questionSelect');
 const attemptCount = document.getElementById('attemptCount');
 const averageScore = document.getElementById('averageScore');
+const themeDistribution = document.getElementById('themeDistribution');
 const questionLevel = document.getElementById('questionLevel');
+const questionLanguage = document.getElementById('questionLanguage');
 const qcmForm = document.getElementById('qcmForm');
 const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+const nextQuestionBtn = document.getElementById('nextQuestionBtn');
 const output = document.getElementById('output');
+const noLimitMode = document.getElementById('noLimitMode');
+
+function shuffle(values) {
+  const copy = [...values];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
 
 function updateScore(score) {
   latestScore = score;
@@ -66,29 +84,17 @@ function updateScore(score) {
 
 function updateSessionAnalytics() {
   const attempts = scoreHistory.length;
-  const average =
-    attempts === 0
-      ? 0
-      : Math.round((scoreHistory.reduce((total, item) => total + item.score, 0) / attempts) * 10) / 10;
+  const average = attempts === 0 ? 0 : Math.round((scoreHistory.reduce((acc, item) => acc + item.score, 0) / attempts) * 10) / 10;
 
   attemptCount.textContent = `Attempts: ${attempts}`;
   averageScore.textContent = `Average score: ${average}/10`;
+  themeDistribution.textContent = `Distribution: ${THEMES.map((theme) => `${theme} ${themeDrawCounts.get(theme)}`).join(' · ')}`;
 }
 
 function logIntegrity(message) {
   const li = document.createElement('li');
   li.textContent = `${new Date().toLocaleTimeString()} — ${message}`;
   integrityLog.prepend(li);
-}
-
-function renderQuestionSelector() {
-  questionSelect.innerHTML = '';
-  questions.forEach((question, index) => {
-    const option = document.createElement('option');
-    option.value = String(index);
-    option.textContent = `${index + 1}. [${question.level}] ${question.title}`;
-    questionSelect.appendChild(option);
-  });
 }
 
 function renderQcmOptions(question) {
@@ -116,10 +122,55 @@ function loadQuestion(question) {
   activeQuestion = question;
   promptText.textContent = question.prompt;
   questionLevel.textContent = `${question.level} · ~${question.estimatedMinutes} min`;
+  questionLanguage.textContent = `Theme: ${question.theme}`;
   renderQcmOptions(question);
   output.textContent = 'Choose one answer, then submit.';
   updateScore(0);
-  logIntegrity(`Loaded QCM question: ${question.id}`);
+  logIntegrity(`Loaded QCM question: ${question.id} (${question.theme})`);
+}
+
+function nextTheme() {
+  if (themeOrder.length === 0 || themePointer >= themeOrder.length) {
+    themeOrder = shuffle(THEMES);
+    themePointer = 0;
+  }
+
+  const theme = themeOrder[themePointer];
+  themePointer += 1;
+  return theme;
+}
+
+function pickQuestionForTheme(theme) {
+  const bank = questionsByTheme.get(theme) || [];
+  if (bank.length === 0) return null;
+
+  const used = usedQuestionsByTheme.get(theme) || new Set();
+  const unused = bank.filter((item) => !used.has(item.id));
+  const source = unused.length > 0 ? unused : bank;
+
+  const selected = source[Math.floor(Math.random() * source.length)];
+  if (!unused.length) {
+    used.clear();
+  }
+  used.add(selected.id);
+  usedQuestionsByTheme.set(theme, used);
+  themeDrawCounts.set(theme, (themeDrawCounts.get(theme) || 0) + 1);
+  return selected;
+}
+
+function loadNextRandomQuestion() {
+  if (isFinished) return;
+
+  const theme = nextTheme();
+  const question = pickQuestionForTheme(theme);
+
+  if (!question) {
+    output.textContent = `⚠️ No question found for theme ${theme}`;
+    return;
+  }
+
+  loadQuestion(question);
+  updateSessionAnalytics();
 }
 
 function evaluateCurrentAnswer() {
@@ -139,7 +190,6 @@ function evaluateCurrentAnswer() {
   return {
     isCorrect,
     score,
-    selectedIndex,
     correctIndex: activeQuestion.correctOptionIndex,
   };
 }
@@ -153,31 +203,31 @@ async function initializeQuestionBank() {
 
     const bank = await response.json();
     const qcmOnly = Array.isArray(bank)
-      ? bank.filter((item) => item.type === 'qcm' && Array.isArray(item.options) && item.options.length >= 2)
+      ? bank.filter(
+          (item) =>
+            item.type === 'qcm' &&
+            THEMES.includes(item.theme) &&
+            Array.isArray(item.options) &&
+            item.options.length >= 2,
+        )
       : [];
 
-    if (qcmOnly.length === 0) {
-      throw new Error('No QCM questions found in the question bank');
+    questionsByTheme = new Map(THEMES.map((theme) => [theme, qcmOnly.filter((item) => item.theme === theme)]));
+
+    const missing = THEMES.filter((theme) => (questionsByTheme.get(theme) || []).length === 0);
+    if (missing.length > 0) {
+      throw new Error(`Missing themes in question bank: ${missing.join(', ')}`);
     }
 
-    questions = qcmOnly;
-    renderQuestionSelector();
-    questionSelect.value = '0';
-    loadQuestion(questions[0]);
+    usedQuestionsByTheme = new Map(THEMES.map((theme) => [theme, new Set()]));
+    loadNextRandomQuestion();
   } catch (error) {
     output.textContent = `❌ Setup error\n${error.message}`;
     submitAnswerBtn.disabled = true;
+    nextQuestionBtn.disabled = true;
     logIntegrity(`Question bank load failed: ${error.message}`);
   }
 }
-
-questionSelect.addEventListener('change', () => {
-  if (isFinished) return;
-  const selectedIndex = Number(questionSelect.value);
-  const question = questions[selectedIndex];
-  if (!question) return;
-  loadQuestion(question);
-});
 
 submitAnswerBtn.addEventListener('click', () => {
   if (isFinished) return;
@@ -185,7 +235,7 @@ submitAnswerBtn.addEventListener('click', () => {
   try {
     const result = evaluateCurrentAnswer();
     updateScore(result.score);
-    scoreHistory.push({ questionId: activeQuestion.id, score: result.score });
+    scoreHistory.push({ questionId: activeQuestion.id, score: result.score, theme: activeQuestion.theme });
     updateSessionAnalytics();
 
     if (result.isCorrect) {
@@ -201,6 +251,8 @@ submitAnswerBtn.addEventListener('click', () => {
     output.textContent = `⚠️ ${error.message}`;
   }
 });
+
+nextQuestionBtn.addEventListener('click', loadNextRandomQuestion);
 
 window.addEventListener('blur', () => {
   logIntegrity('Browser window blur detected');
@@ -221,8 +273,9 @@ function finishAssessment(reason) {
 
   isFinished = true;
   submitAnswerBtn.disabled = true;
-  questionSelect.disabled = true;
+  nextQuestionBtn.disabled = true;
   finishBtn.disabled = true;
+  noLimitMode.disabled = true;
 
   qcmForm.querySelectorAll('input[type="radio"]').forEach((input) => {
     input.disabled = true;
@@ -231,10 +284,15 @@ function finishAssessment(reason) {
   sessionStatus.textContent = 'Submitted';
   sessionStatus.classList.add('done');
 
-  const spentSeconds = initialSeconds - remainingSeconds;
+  const spentSeconds = noLimitEnabled ? null : initialSeconds - remainingSeconds;
   const logCount = integrityLog.querySelectorAll('li').length;
+  const attempts = scoreHistory.length;
+  const average = attempts === 0 ? 0 : Math.round((scoreHistory.reduce((acc, item) => acc + item.score, 0) / attempts) * 10) / 10;
+
   completionSummary.textContent =
-    `Reason: ${reason}. Time used: ${formatDuration(spentSeconds)}. Score: ${latestScore}/10. Integrity events: ${logCount}.`;
+    `Reason: ${reason}. ` +
+    `${noLimitEnabled ? 'Time used: unlimited mode.' : `Time used: ${formatDuration(spentSeconds)}.`} ` +
+    `Final average score: ${average}/10 over ${attempts} attempts. Integrity events: ${logCount}.`;
   completionCard.hidden = false;
 
   output.textContent = `${output.textContent}\n\n✅ Assessment locked and submitted.`;
@@ -248,6 +306,11 @@ const countdown = setInterval(() => {
     return;
   }
 
+  if (noLimitEnabled) {
+    timer.textContent = 'Time: ∞ (no limit)';
+    return;
+  }
+
   remainingSeconds = Math.max(0, remainingSeconds - 1);
   timer.textContent = `Time: ${formatDuration(remainingSeconds)}`;
 
@@ -256,10 +319,17 @@ const countdown = setInterval(() => {
   }
 }, 1000);
 
-finishBtn.addEventListener('click', () => finishAssessment('manual submit'));
+noLimitMode.addEventListener('change', () => {
+  if (isFinished) return;
+  noLimitEnabled = noLimitMode.checked;
+  timer.textContent = noLimitEnabled ? 'Time: ∞ (no limit)' : `Time: ${formatDuration(remainingSeconds)}`;
+  logIntegrity(`No limit mode ${noLimitEnabled ? 'enabled' : 'disabled'}`);
+});
+
+finishBtn.addEventListener('click', () => finishAssessment('manual stop'));
 
 renderTutorial();
 updateScore(0);
 updateSessionAnalytics();
-logIntegrity('Session started (QCM-only mode)');
+logIntegrity('Session started (balanced random QCM mode)');
 initializeQuestionBank();

@@ -1,61 +1,801 @@
 [
   {
-    "id": "js-map-output",
+    "id": "sql-1",
     "type": "qcm",
-    "level": "Easy",
-    "estimatedMinutes": 2,
-    "title": "JavaScript array map",
-    "prompt": "What is the output of [1, 2, 3].map((n) => n * 2)?",
-    "options": ["[1, 2, 3]", "[2, 4, 6]", "6", "undefined"],
-    "correctOptionIndex": 1
-  },
-  {
-    "id": "http-status-created",
-    "type": "qcm",
-    "level": "Easy",
-    "estimatedMinutes": 2,
-    "title": "HTTP semantics",
-    "prompt": "Which HTTP status code is most appropriate after successfully creating a resource?",
-    "options": ["200", "201", "204", "404"],
-    "correctOptionIndex": 1
-  },
-  {
-    "id": "sql-left-join",
-    "type": "qcm",
+    "theme": "SQL",
     "level": "Intermediate",
-    "estimatedMinutes": 3,
-    "title": "SQL LEFT JOIN",
-    "prompt": "In a LEFT JOIN, what happens to rows from the left table with no match in the right table?",
+    "estimatedMinutes": 2,
+    "title": "INNER JOIN",
+    "prompt": "What does INNER JOIN return?",
     "options": [
-      "They are removed from the result",
-      "They are duplicated",
-      "They are kept and right-side columns are NULL",
-      "The query fails"
+      "All rows from left table",
+      "Matching rows from both tables",
+      "Only NULL rows",
+      "Cartesian product"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-2",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "COUNT semantics",
+    "prompt": "What does COUNT(*) include?",
+    "options": [
+      "Only non-NULL values",
+      "All rows including NULLs",
+      "Only distinct rows",
+      "Only indexed rows"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-3",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "GROUP BY",
+    "prompt": "Why use GROUP BY?",
+    "options": [
+      "To sort rows",
+      "To aggregate rows by columns",
+      "To filter joined rows",
+      "To rename columns"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-4",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "WHERE vs HAVING",
+    "prompt": "HAVING is mainly used to...",
+    "options": [
+      "Filter before aggregation",
+      "Filter after aggregation",
+      "Join tables",
+      "Create indexes"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-5",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Primary key",
+    "prompt": "A primary key must be...",
+    "options": [
+      "Nullable and unique",
+      "Non-null and unique",
+      "Only numeric",
+      "Automatically indexed only in NoSQL"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-6",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "LEFT JOIN",
+    "prompt": "LEFT JOIN keeps...",
+    "options": [
+      "Only matching right rows",
+      "All left rows + matched right rows",
+      "Only unmatched rows",
+      "No rows with NULL"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-7",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "ORDER BY",
+    "prompt": "ORDER BY default direction is...",
+    "options": [
+      "DESC",
+      "ASC",
+      "RANDOM",
+      "NONE"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-8",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "DELETE vs TRUNCATE",
+    "prompt": "TRUNCATE usually...",
+    "options": [
+      "Deletes with WHERE",
+      "Removes all rows quickly",
+      "Drops table schema",
+      "Creates backup"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-9",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Index usage",
+    "prompt": "An index usually improves...",
+    "options": [
+      "Write speed always",
+      "Read queries on indexed columns",
+      "Storage compression",
+      "Foreign key creation"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "sql-10",
+    "type": "qcm",
+    "theme": "SQL",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "UNION",
+    "prompt": "UNION removes...",
+    "options": [
+      "Duplicates by default",
+      "All NULL values",
+      "All duplicates and NULLs",
+      "Nothing"
+    ],
+    "correctOptionIndex": 0
+  },
+  {
+    "id": "java-1",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "JVM role",
+    "prompt": "JVM is responsible for...",
+    "options": [
+      "Only compiling Java to source",
+      "Running bytecode",
+      "Managing CSS",
+      "Serving HTTP only"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "java-2",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Interface",
+    "prompt": "An interface in Java can...",
+    "options": [
+      "Store instance state fields",
+      "Define contracts for classes",
+      "Replace packages",
+      "Disable polymorphism"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "java-3",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "final keyword",
+    "prompt": "final on a variable means...",
+    "options": [
+      "Can be reassigned once",
+      "Cannot be reassigned",
+      "Cannot be initialized",
+      "Is static"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "java-4",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Exception hierarchy",
+    "prompt": "RuntimeException is...",
+    "options": [
+      "Checked exception",
+      "Unchecked exception",
+      "Compiler error",
+      "Annotation"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "java-5",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Collection type",
+    "prompt": "Which collection disallows duplicates?",
+    "options": [
+      "List",
+      "Set",
+      "Queue",
+      "ArrayList"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "java-6",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Stream API",
+    "prompt": "map in Stream API is used to...",
+    "options": [
+      "Filter elements",
+      "Transform each element",
+      "Sort descending only",
+      "Terminate stream"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "java-7",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Overloading",
+    "prompt": "Method overloading means...",
+    "options": [
+      "Same method name, different params",
+      "Same params, different return only",
+      "Different class names",
+      "Interface implementation"
+    ],
+    "correctOptionIndex": 0
+  },
+  {
+    "id": "java-8",
+    "type": "qcm",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Access modifier",
+    "prompt": "private members are accessible...",
+    "options": [
+      "Everywhere",
+      "In same package only",
+      "Inside the same class only",
+      "In subclasses only"
     ],
     "correctOptionIndex": 2
   },
   {
-    "id": "big-o-binary-search",
+    "id": "java-9",
     "type": "qcm",
+    "theme": "Java",
     "level": "Intermediate",
     "estimatedMinutes": 2,
-    "title": "Complexity",
-    "prompt": "What is the time complexity of binary search on a sorted array?",
-    "options": ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
+    "title": "Spring boot starter",
+    "prompt": "spring-boot-starter-web provides...",
+    "options": [
+      "Only SQL driver",
+      "Web dependencies for REST/MVC",
+      "Angular runtime",
+      "Docker daemon"
+    ],
     "correctOptionIndex": 1
   },
   {
-    "id": "git-rebase-purpose",
+    "id": "java-10",
     "type": "qcm",
-    "level": "Advanced",
-    "estimatedMinutes": 3,
-    "title": "Git rebase",
-    "prompt": "What is the primary goal of git rebase?",
+    "theme": "Java",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Optional",
+    "prompt": "Optional is mainly used to...",
     "options": [
-      "Delete remote branches",
-      "Replay commits onto another base to keep a linear history",
-      "Squash all files into one",
-      "Reset the repository permissions"
+      "Replace all objects",
+      "Represent possible absence of value",
+      "Store lists",
+      "Handle threads"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-1",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Component",
+    "prompt": "An Angular component is...",
+    "options": [
+      "A database table",
+      "A class + template + metadata",
+      "A CSS preprocessor",
+      "A SQL function"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-2",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Data binding",
+    "prompt": "[(ngModel)] is...",
+    "options": [
+      "One-way binding",
+      "Two-way binding",
+      "Dependency injection",
+      "Routing"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-3",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Directive",
+    "prompt": "*ngFor is used to...",
+    "options": [
+      "Loop over a list in template",
+      "Create HTTP request",
+      "Define route guards",
+      "Inject service"
+    ],
+    "correctOptionIndex": 0
+  },
+  {
+    "id": "angular-4",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Service",
+    "prompt": "A service is commonly used for...",
+    "options": [
+      "Styling only",
+      "Reusable business logic / API calls",
+      "Template parsing only",
+      "Compilation"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-5",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "RouterLink",
+    "prompt": "routerLink is used for...",
+    "options": [
+      "HTTP GET",
+      "Client-side navigation",
+      "State management",
+      "Unit tests"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-6",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Lifecycle",
+    "prompt": "ngOnInit runs...",
+    "options": [
+      "Before component construction",
+      "After first component initialization",
+      "After component destroy",
+      "On every keypress"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-7",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Pipes",
+    "prompt": "A pipe in Angular is used to...",
+    "options": [
+      "Mutate backend DB",
+      "Transform display values",
+      "Compile TypeScript",
+      "Bundle modules"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-8",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Reactive forms",
+    "prompt": "FormControl belongs to...",
+    "options": [
+      "Template-driven forms only",
+      "Reactive forms API",
+      "HTTP module",
+      "Animations module"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-9",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Standalone",
+    "prompt": "A standalone component...",
+    "options": [
+      "Must be in NgModule",
+      "Can be used without NgModule declaration",
+      "Cannot use imports",
+      "Cannot use DI"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "angular-10",
+    "type": "qcm",
+    "theme": "Angular",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Change detection",
+    "prompt": "OnPush strategy helps by...",
+    "options": [
+      "Forcing full page reload",
+      "Reducing unnecessary checks",
+      "Blocking all updates",
+      "Disabling rendering"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-1",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Type safety",
+    "prompt": "TypeScript adds...",
+    "options": [
+      "Runtime VM",
+      "Static typing on top of JS",
+      "Database migrations",
+      "Only CSS support"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-2",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Interface usage",
+    "prompt": "An interface defines...",
+    "options": [
+      "Runtime object instance",
+      "Shape/contract of an object",
+      "Only classes",
+      "HTTP headers"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-3",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Union type",
+    "prompt": "string | number is...",
+    "options": [
+      "Intersection type",
+      "Union type",
+      "Tuple type",
+      "Enum type"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-4",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Any type",
+    "prompt": "any type...",
+    "options": [
+      "Provides strict safety",
+      "Disables most type checks",
+      "Can only store strings",
+      "Is deprecated and forbidden"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-5",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Unknown type",
+    "prompt": "unknown compared to any is...",
+    "options": [
+      "Less safe",
+      "Safer because it requires narrowing",
+      "Same behavior always",
+      "Only for arrays"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-6",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Generics",
+    "prompt": "Generics are useful to...",
+    "options": [
+      "Avoid reusable code",
+      "Keep type information reusable",
+      "Compile to Java bytecode",
+      "Remove all interfaces"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-7",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Enum",
+    "prompt": "enum is used to...",
+    "options": [
+      "Create API endpoint",
+      "Define named constants",
+      "Import modules",
+      "Handle promises"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-8",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Readonly",
+    "prompt": "readonly property...",
+    "options": [
+      "Can be modified anywhere",
+      "Cannot be reassigned after initialization",
+      "Forbids object creation",
+      "Means private"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-9",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Type narrowing",
+    "prompt": "typeof checks help...",
+    "options": [
+      "Delete types",
+      "Narrow union types",
+      "Generate SQL",
+      "Format CSS"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "typescript-10",
+    "type": "qcm",
+    "theme": "TypeScript",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "tsconfig",
+    "prompt": "tsconfig.json configures...",
+    "options": [
+      "Browser cache",
+      "TypeScript compiler behavior",
+      "SQL dialect",
+      "Java runtime"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-1",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Dependency Injection",
+    "prompt": "Spring DI means...",
+    "options": [
+      "Manual object wiring everywhere",
+      "Container injects dependencies",
+      "No interfaces needed",
+      "No beans in app"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-2",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "@RestController",
+    "prompt": "@RestController combines...",
+    "options": [
+      "@Controller and @ResponseBody",
+      "@Service and @Repository",
+      "@Entity and @Table",
+      "@Bean and @Autowired"
+    ],
+    "correctOptionIndex": 0
+  },
+  {
+    "id": "spring-framework-3",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "@Service",
+    "prompt": "@Service is typically used for...",
+    "options": [
+      "Persistence model",
+      "Business logic layer",
+      "HTTP filter only",
+      "Unit test mocks"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-4",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "@Repository",
+    "prompt": "@Repository is mainly for...",
+    "options": [
+      "Frontend templates",
+      "Data access layer",
+      "Security rules",
+      "Caching UI"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-5",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Application properties",
+    "prompt": "application.properties stores...",
+    "options": [
+      "Only Java code",
+      "Externalized configuration",
+      "Compiled bytecode",
+      "Docker images"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-6",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Spring Boot",
+    "prompt": "Spring Boot aims to...",
+    "options": [
+      "Increase boilerplate",
+      "Simplify Spring app setup",
+      "Replace Java",
+      "Disable auto config"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-7",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "@Autowired",
+    "prompt": "@Autowired is used to...",
+    "options": [
+      "Create SQL tables",
+      "Inject bean dependencies",
+      "Compile classes",
+      "Open sockets manually"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-8",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Actuator",
+    "prompt": "Spring Boot Actuator provides...",
+    "options": [
+      "Template engine",
+      "Production monitoring endpoints",
+      "Angular routing",
+      "JVM replacement"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-9",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Transaction",
+    "prompt": "@Transactional is used for...",
+    "options": [
+      "HTTP caching",
+      "Transaction boundaries",
+      "CSS theming",
+      "Thread sleep"
+    ],
+    "correctOptionIndex": 1
+  },
+  {
+    "id": "spring-framework-10",
+    "type": "qcm",
+    "theme": "Spring Framework",
+    "level": "Intermediate",
+    "estimatedMinutes": 2,
+    "title": "Bean scope",
+    "prompt": "Default bean scope in Spring is...",
+    "options": [
+      "prototype",
+      "singleton",
+      "request",
+      "session"
     ],
     "correctOptionIndex": 1
   }
