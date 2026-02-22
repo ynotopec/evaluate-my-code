@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen IDE Mock</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">Screen IDE</div>
+        <div class="topbar-actions">
+          <button class="ghost">Run</button>
+          <button class="primary">Share</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar panel">
+          <h2>Files</h2>
+          <ul>
+            <li class="active">index.html</li>
+            <li>styles.css</li>
+            <li>app.js</li>
+            <li>README.md</li>
+          </ul>
+        </aside>
+
+        <section class="editor panel">
+          <div class="panel-title">index.html</div>
+          <pre><code>&lt;section class="hero"&gt;
+  &lt;h1&gt;Build in real time&lt;/h1&gt;
+  &lt;p&gt;Collaborate, edit, and preview instantly.&lt;/p&gt;
+  &lt;button&gt;Start coding&lt;/button&gt;
+&lt;/section&gt;</code></pre>
+        </section>
+
+        <section class="preview panel">
+          <div class="panel-title">Live preview</div>
+          <div class="preview-canvas">
+            <div class="hero-card">
+              <p class="badge">Realtime</p>
+              <h1>Build in real time</h1>
+              <p>Collaborate, edit, and preview instantly.</p>
+              <button>Start coding</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
