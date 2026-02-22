@@ -118,15 +118,29 @@ function renderQcmOptions(question) {
   });
 }
 
+function prepareQuestionForDisplay(question) {
+  const indexedOptions = question.options.map((text, index) => ({ text, index }));
+  const shuffledOptions = shuffle(indexedOptions);
+  const remappedCorrectIndex = shuffledOptions.findIndex(
+    (option) => option.index === question.correctOptionIndex,
+  );
+
+  return {
+    ...question,
+    options: shuffledOptions.map((option) => option.text),
+    correctOptionIndex: remappedCorrectIndex,
+  };
+}
+
 function loadQuestion(question) {
-  activeQuestion = question;
+  activeQuestion = prepareQuestionForDisplay(question);
   promptText.textContent = question.prompt;
-  questionLevel.textContent = `${question.level} · ~${question.estimatedMinutes} min`;
-  questionLanguage.textContent = `Theme: ${question.theme}`;
-  renderQcmOptions(question);
+  questionLevel.textContent = `${activeQuestion.level} · ~${activeQuestion.estimatedMinutes} min`;
+  questionLanguage.textContent = `Theme: ${activeQuestion.theme}`;
+  renderQcmOptions(activeQuestion);
   output.textContent = 'Choose one answer, then submit.';
   updateScore(0);
-  logIntegrity(`Loaded QCM question: ${question.id} (${question.theme})`);
+  logIntegrity(`Loaded QCM question: ${activeQuestion.id} (${activeQuestion.theme})`);
 }
 
 function nextTheme() {
