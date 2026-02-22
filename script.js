@@ -140,6 +140,38 @@ function shuffleQuestions(input) {
   return shuffled;
 }
 
+const servedQuestionsStorageKey = 'assessment-served-questions';
+
+function getServedQuestionIds() {
+  try {
+    const raw = localStorage.getItem(servedQuestionsStorageKey);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function setServedQuestionIds(ids) {
+  localStorage.setItem(servedQuestionsStorageKey, JSON.stringify(ids));
+}
+
+function arrangeQuestionOrder(bank) {
+  const servedIds = getServedQuestionIds();
+  const unseen = bank.filter((question) => !servedIds.includes(question.id));
+  const seen = bank.filter((question) => servedIds.includes(question.id));
+
+  if (unseen.length === 0) {
+    const reshuffled = shuffleQuestions(bank);
+    setServedQuestionIds([reshuffled[0].id]);
+    return reshuffled;
+  }
+
+  const ordered = [...shuffleQuestions(unseen), ...shuffleQuestions(seen)];
+  setServedQuestionIds([...servedIds, ordered[0].id]);
+  return ordered;
+}
+
 async function initializeQuestionBank() {
   try {
     const response = await fetch('questions.json');
@@ -152,7 +184,7 @@ async function initializeQuestionBank() {
       throw new Error('Question bank is empty');
     }
 
-    questions = shuffleQuestions(bank);
+    questions = arrangeQuestionOrder(bank);
     renderQuestionSelector();
     questionSelect.value = '0';
     loadQuestion(questions[0]);
