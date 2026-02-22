@@ -47,6 +47,7 @@ document.getElementById('nextStep').addEventListener('click', () => {
 
 let files = {};
 let activeQuestion = null;
+let activeQuestionLanguage = 'javascript';
 let latestScore = 0;
 let questions = [];
 let scoreHistory = [];
@@ -72,6 +73,32 @@ const questionSelect = document.getElementById('questionSelect');
 const attemptCount = document.getElementById('attemptCount');
 const averageScore = document.getElementById('averageScore');
 const questionLevel = document.getElementById('questionLevel');
+const questionLanguage = document.getElementById('questionLanguage');
+
+function normalizeQuestionLanguage(language) {
+  if (!language) return 'javascript';
+  return String(language).trim().toLowerCase();
+}
+
+function getQuestionFileName(question) {
+  if (question.starterFile) return question.starterFile;
+
+  const language = normalizeQuestionLanguage(question.language);
+  if (language === 'java') return 'Main.java';
+  return 'index.js';
+}
+
+function getQuestionTestFileName(question) {
+  if (question.testFile) return question.testFile;
+
+  const language = normalizeQuestionLanguage(question.language);
+  if (language === 'java') return 'TestMain.java';
+  return 'test.js';
+}
+
+function canEvaluateInBrowser(question) {
+  return normalizeQuestionLanguage(question.language) === 'javascript';
+}
 
 function updateScore(score) {
   latestScore = score;
@@ -90,6 +117,10 @@ function updateSessionAnalytics() {
 }
 
 function createVisibleTestFile(question) {
+  if (!canEvaluateInBrowser(question)) {
+    return `// Auto-check preview unavailable for ${question.language || 'this language'} in browser mode.\n// Run checks in your dedicated runtime.`;
+  }
+
   const cases = question.tests
     .map(
       (test) =>
@@ -102,15 +133,20 @@ function createVisibleTestFile(question) {
 
 function loadQuestion(question) {
   activeQuestion = question;
+  activeQuestionLanguage = normalizeQuestionLanguage(question.language);
   promptText.textContent = question.prompt;
   questionLevel.textContent = `${question.level} · ~${question.estimatedMinutes} min`;
+  questionLanguage.textContent = `Language: ${activeQuestionLanguage}`;
+  const starterFile = getQuestionFileName(question);
+  const testFile = getQuestionTestFileName(question);
+
   files = {
-    'index.js': question.starterCode,
+    [starterFile]: question.starterCode,
     'README.md': `# Challenge\n\n${question.prompt}\n`,
-    'test.js': createVisibleTestFile(question),
+    [testFile]: createVisibleTestFile(question),
   };
 
-  currentFile = 'index.js';
+  currentFile = starterFile;
   editor.value = files[currentFile];
   currentFileLabel.textContent = currentFile;
   saved = true;
@@ -118,6 +154,12 @@ function loadQuestion(question) {
   renderFileList();
   output.textContent = 'Console output…';
   updateScore(0);
+  runBtn.disabled = !canEvaluateInBrowser(question);
+
+  if (!canEvaluateInBrowser(question)) {
+    output.textContent = `⚠️ Auto-checks are currently available only for JavaScript. Loaded language: ${activeQuestionLanguage}.`;
+  }
+
   logIntegrity(`Loaded question: ${question.id}`);
 }
 
@@ -283,11 +325,18 @@ function deepCloneValue(value) {
 function evaluateCurrentSolution() {
   const lines = [];
   const printLine = (line) => lines.push(line);
-  const exported = runModule('index.js', {}, printLine);
 
   if (!activeQuestion) {
     throw new Error('No active question loaded');
   }
+
+  if (!canEvaluateInBrowser(activeQuestion)) {
+    throw new Error(
+      `Cannot run automatic checks in-browser for language '${activeQuestionLanguage}'.`,
+    );
+  }
+
+  const exported = runModule(getQuestionFileName(activeQuestion), {}, printLine);
 
   const candidateFn = exported[activeQuestion.functionName];
   if (typeof candidateFn !== 'function') {
