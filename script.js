@@ -4,13 +4,19 @@ app.hidden = false;
 const tabs = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.panel');
 
-tabs.forEach((tab) => {
-  tab.addEventListener('click', () => {
-    tabs.forEach((t) => t.classList.remove('active'));
-    panels.forEach((p) => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.tab).classList.add('active');
+function activateTab(tabId) {
+  tabs.forEach((tab) => {
+    const isActive = tab.dataset.tab === tabId;
+    tab.classList.toggle('active', isActive);
   });
+
+  panels.forEach((panel) => {
+    panel.classList.toggle('active', panel.id === tabId);
+  });
+}
+
+tabs.forEach((tab) => {
+  tab.addEventListener('click', () => activateTab(tab.dataset.tab));
 });
 
 const tutorialSteps = [
@@ -47,11 +53,18 @@ const files = {
 
 let currentFile = 'index.js';
 let saved = true;
+let isFinished = false;
 const fileList = document.getElementById('fileList');
 const editor = document.getElementById('editor');
 const currentFileLabel = document.getElementById('currentFile');
 const savedState = document.getElementById('savedState');
 const output = document.getElementById('output');
+const finishBtn = document.getElementById('finishBtn');
+const runBtn = document.getElementById('runBtn');
+const saveBtn = document.getElementById('saveBtn');
+const sessionStatus = document.getElementById('sessionStatus');
+const completionCard = document.getElementById('completionCard');
+const completionSummary = document.getElementById('completionSummary');
 
 function renderFileList() {
   fileList.innerHTML = '';
@@ -61,7 +74,9 @@ function renderFileList() {
     btn.type = 'button';
     btn.className = `file-btn ${fileName === currentFile ? 'active' : ''}`;
     btn.textContent = fileName;
+    btn.disabled = isFinished;
     btn.addEventListener('click', () => {
+      if (isFinished) return;
       files[currentFile] = editor.value;
       currentFile = fileName;
       currentFileLabel.textContent = currentFile;
@@ -122,17 +137,20 @@ function runModule(fileName, cache, printLine) {
 }
 
 editor.addEventListener('input', () => {
+  if (isFinished) return;
   saved = false;
   renderSaveState();
 });
 
-document.getElementById('saveBtn').addEventListener('click', () => {
+saveBtn.addEventListener('click', () => {
+  if (isFinished) return;
   files[currentFile] = editor.value;
   saved = true;
   renderSaveState();
 });
 
-document.getElementById('runBtn').addEventListener('click', () => {
+runBtn.addEventListener('click', () => {
+  if (isFinished) return;
   files[currentFile] = editor.value;
 
   const lines = [];
@@ -163,17 +181,58 @@ window.addEventListener('blur', () => {
 });
 
 let remainingSeconds = 12 * 60;
+const initialSeconds = remainingSeconds;
 const timer = document.getElementById('timer');
-setInterval(() => {
+
+function formatDuration(totalSeconds) {
+  const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+  const s = String(totalSeconds % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function finishAssessment(reason) {
+  if (isFinished) return;
+
+  isFinished = true;
+  files[currentFile] = editor.value;
+  saved = true;
+  renderSaveState();
+
+  editor.disabled = true;
+  runBtn.disabled = true;
+  saveBtn.disabled = true;
+  finishBtn.disabled = true;
+  renderFileList();
+
+  sessionStatus.textContent = 'Submitted';
+  sessionStatus.classList.add('done');
+
+  const spentSeconds = initialSeconds - remainingSeconds;
+  const logCount = integrityLog.querySelectorAll('li').length;
+  completionSummary.textContent =
+    `Reason: ${reason}. Time used: ${formatDuration(spentSeconds)}. Integrity events: ${logCount}.`;
+  completionCard.hidden = false;
+
+  output.textContent = `${output.textContent}\n\n✅ Assessment locked and submitted.`;
+  activateTab('integrity');
+  logIntegrity(`Assessment submitted (${reason})`);
+}
+
+const countdown = setInterval(() => {
+  if (isFinished) {
+    clearInterval(countdown);
+    return;
+  }
+
   remainingSeconds = Math.max(0, remainingSeconds - 1);
-  const m = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
-  const s = String(remainingSeconds % 60).padStart(2, '0');
-  timer.textContent = `Time: ${m}:${s}`;
+  timer.textContent = `Time: ${formatDuration(remainingSeconds)}`;
+
+  if (remainingSeconds === 0) {
+    finishAssessment('time elapsed');
+  }
 }, 1000);
 
-document.getElementById('finishBtn').addEventListener('click', () => {
-  alert('Assessment submitted.');
-});
+finishBtn.addEventListener('click', () => finishAssessment('manual submit'));
 
 editor.value = files[currentFile];
 currentFileLabel.textContent = currentFile;

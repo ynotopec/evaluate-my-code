@@ -15,10 +15,16 @@
       <header class="topbar">
         <h1>Technical assessment — candidate IDE</h1>
         <div class="meta">
+          <span id="sessionStatus" class="status-pill" aria-live="polite">Session in progress</span>
           <span id="timer">Time: 12:00</span>
           <button id="finishBtn" class="primary">Finish</button>
         </div>
       </header>
+
+      <section id="completionCard" class="completion-card" hidden>
+        <h2>Assessment submitted</h2>
+        <p id="completionSummary">Your final stats will appear here once you finish.</p>
+      </section>
 
       <section class="progress-wrap">
         <div class="progress-head">
