@@ -15,7 +15,7 @@ tabs.forEach((tab) => {
 
 const tutorialSteps = [
   'Step 1/3 — Review the environment and get comfortable with the interface.',
-  'Step 2/3 — Try the editor: write code, save it, and run a quick example.',
+  'Step 2/3 — Try the editor: write code, save it, and run the real test file.',
   'Step 3/3 — Start the assessment when you are ready.',
 ];
 let tutorialIndex = 0;
@@ -79,6 +79,48 @@ function renderSaveState() {
   savedState.textContent = saved ? 'Saved' : 'Unsaved';
 }
 
+function normalizeModuleName(moduleName) {
+  if (moduleName === './index') {
+    return 'index.js';
+  }
+
+  if (moduleName.endsWith('.js')) {
+    return moduleName.replace('./', '');
+  }
+
+  return `${moduleName.replace('./', '')}.js`;
+}
+
+function runModule(fileName, cache, printLine) {
+  if (cache[fileName]) {
+    return cache[fileName].exports;
+  }
+
+  const source = files[fileName];
+  if (typeof source !== 'string') {
+    throw new Error(`Missing file: ${fileName}`);
+  }
+
+  const module = { exports: {} };
+  cache[fileName] = module;
+
+  const localRequire = (moduleName) => {
+    const normalized = normalizeModuleName(moduleName);
+    if (!(normalized in files)) {
+      throw new Error(`Cannot find module '${moduleName}'`);
+    }
+    return runModule(normalized, cache, printLine);
+  };
+
+  const localConsole = {
+    log: (...args) => printLine(args.map(String).join(' ')),
+  };
+
+  const evaluator = new Function('require', 'module', 'exports', 'console', source);
+  evaluator(localRequire, module, module.exports, localConsole);
+  return module.exports;
+}
+
 editor.addEventListener('input', () => {
   saved = false;
   renderSaveState();
@@ -92,10 +134,16 @@ document.getElementById('saveBtn').addEventListener('click', () => {
 
 document.getElementById('runBtn').addEventListener('click', () => {
   files[currentFile] = editor.value;
-  const hasFunction = files['index.js'].includes('sumPositive');
-  output.textContent = hasFunction
-    ? '✅ Simulated run OK\nExample result: 6'
-    : '❌ sumPositive function not found';
+
+  const lines = [];
+  const printLine = (line) => lines.push(line);
+
+  try {
+    runModule('test.js', {}, printLine);
+    output.textContent = lines.length > 0 ? lines.join('\n') : 'Execution finished with no output.';
+  } catch (error) {
+    output.textContent = `❌ Runtime error\n${error.message}`;
+  }
 });
 
 const integrityLog = document.getElementById('integrityLog');
@@ -124,7 +172,7 @@ setInterval(() => {
 }, 1000);
 
 document.getElementById('finishBtn').addEventListener('click', () => {
-  alert('Assessment submitted (simulation).');
+  alert('Assessment submitted.');
 });
 
 editor.value = files[currentFile];

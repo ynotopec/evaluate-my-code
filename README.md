@@ -1,6 +1,6 @@
-# Assessment welcome page mock
+# Assessment welcome page
 
-This repository contains a static webpage that recreates a candidate coding-screen IDE flow and now includes a tutorial section explaining what `screen-ide.coderpad.io` is, with key characteristics and source links.
+This repository contains a static webpage that provides a candidate coding-screen IDE flow and includes a tutorial section explaining what `screen-ide.coderpad.io` is, with key characteristics and source links. The editor now executes the actual in-app `test.js` file against `index.js` instead of returning a mocked run result.
 
 ## Run locally
 
