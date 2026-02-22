@@ -44,6 +44,7 @@ let isFinished = false;
 let activeQuestion = null;
 let latestScore = 0;
 let scoreHistory = [];
+let hasAnsweredCurrentQuestion = false;
 let noLimitEnabled = false;
 let themePointer = 0;
 let themeOrder = [];
@@ -60,6 +61,7 @@ const integrityLog = document.getElementById('integrityLog');
 const attemptCount = document.getElementById('attemptCount');
 const averageScore = document.getElementById('averageScore');
 const themeDistribution = document.getElementById('themeDistribution');
+const scoringMethod = document.getElementById('scoringMethod');
 const questionLevel = document.getElementById('questionLevel');
 const questionLanguage = document.getElementById('questionLanguage');
 const qcmForm = document.getElementById('qcmForm');
@@ -77,6 +79,30 @@ function shuffle(values) {
   return copy;
 }
 
+function getQuestionWeight(question) {
+  const levelWeights = {
+    Beginner: 0.8,
+    Intermediate: 1,
+    Advanced: 1.2,
+    Expert: 1.4,
+  };
+
+  const levelWeight = levelWeights[question.level] || 1;
+  const timeWeight = Math.max(1, Number(question.estimatedMinutes) || 1) / 2;
+
+  return levelWeight * timeWeight;
+}
+
+function computeAverageScore() {
+  if (scoreHistory.length === 0) return 0;
+
+  const weightedPoints = scoreHistory.reduce((acc, attempt) => acc + attempt.score * attempt.weight, 0);
+  const totalWeight = scoreHistory.reduce((acc, attempt) => acc + attempt.weight, 0);
+
+  if (totalWeight === 0) return 0;
+  return Math.round((weightedPoints / totalWeight) * 10) / 10;
+}
+
 function updateScore(score) {
   latestScore = score;
   scorePill.textContent = `Score: ${score}/10`;
@@ -84,10 +110,11 @@ function updateScore(score) {
 
 function updateSessionAnalytics() {
   const attempts = scoreHistory.length;
-  const average = attempts === 0 ? 0 : Math.round((scoreHistory.reduce((acc, item) => acc + item.score, 0) / attempts) * 10) / 10;
+  const average = computeAverageScore();
 
   attemptCount.textContent = `Attempts: ${attempts}`;
   averageScore.textContent = `Average score: ${average}/10`;
+  scoringMethod.textContent = 'Scoring: weighted average (difficulty + estimated time)';
   themeDistribution.textContent = `Distribution: ${THEMES.map((theme) => `${theme} ${themeDrawCounts.get(theme)}`).join(' · ')}`;
 }
 
@@ -139,6 +166,8 @@ function loadQuestion(question) {
   questionLanguage.textContent = `Theme: ${activeQuestion.theme}`;
   renderQcmOptions(activeQuestion);
   output.textContent = 'Choose one answer, then submit.';
+  hasAnsweredCurrentQuestion = false;
+  submitAnswerBtn.disabled = false;
   updateScore(0);
   logIntegrity(`Loaded QCM question: ${activeQuestion.id} (${activeQuestion.theme})`);
 }
@@ -205,6 +234,7 @@ function evaluateCurrentAnswer() {
     isCorrect,
     score,
     correctIndex: activeQuestion.correctOptionIndex,
+    weight: getQuestionWeight(activeQuestion),
   };
 }
 
@@ -245,11 +275,22 @@ async function initializeQuestionBank() {
 
 submitAnswerBtn.addEventListener('click', () => {
   if (isFinished) return;
+  if (hasAnsweredCurrentQuestion) {
+    output.textContent = '⚠️ This question has already been submitted. Load the next one to continue.';
+    return;
+  }
 
   try {
     const result = evaluateCurrentAnswer();
     updateScore(result.score);
-    scoreHistory.push({ questionId: activeQuestion.id, score: result.score, theme: activeQuestion.theme });
+    scoreHistory.push({
+      questionId: activeQuestion.id,
+      score: result.score,
+      theme: activeQuestion.theme,
+      weight: result.weight,
+    });
+    hasAnsweredCurrentQuestion = true;
+    submitAnswerBtn.disabled = true;
     updateSessionAnalytics();
 
     if (result.isCorrect) {
@@ -301,7 +342,7 @@ function finishAssessment(reason) {
   const spentSeconds = noLimitEnabled ? null : initialSeconds - remainingSeconds;
   const logCount = integrityLog.querySelectorAll('li').length;
   const attempts = scoreHistory.length;
-  const average = attempts === 0 ? 0 : Math.round((scoreHistory.reduce((acc, item) => acc + item.score, 0) / attempts) * 10) / 10;
+  const average = computeAverageScore();
 
   completionSummary.textContent =
     `Reason: ${reason}. ` +
