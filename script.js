@@ -50,6 +50,7 @@ let themePointer = 0;
 let themeOrder = [];
 let usedQuestionsByTheme = new Map();
 let themeDrawCounts = new Map(THEMES.map((theme) => [theme, 0]));
+let lastQuestionIdByTheme = new Map();
 
 const finishBtn = document.getElementById('finishBtn');
 const sessionStatus = document.getElementById('sessionStatus');
@@ -189,13 +190,22 @@ function pickQuestionForTheme(theme) {
 
   const used = usedQuestionsByTheme.get(theme) || new Set();
   const unused = bank.filter((item) => !used.has(item.id));
-  const source = unused.length > 0 ? unused : bank;
+  let source = unused.length > 0 ? unused : bank;
+
+  if (unused.length === 0 && source.length > 1) {
+    const lastQuestionId = lastQuestionIdByTheme.get(theme);
+    const withoutLastQuestion = source.filter((item) => item.id !== lastQuestionId);
+    if (withoutLastQuestion.length > 0) {
+      source = withoutLastQuestion;
+    }
+  }
 
   const selected = source[Math.floor(Math.random() * source.length)];
   if (!unused.length) {
     used.clear();
   }
   used.add(selected.id);
+  lastQuestionIdByTheme.set(theme, selected.id);
   usedQuestionsByTheme.set(theme, used);
   themeDrawCounts.set(theme, (themeDrawCounts.get(theme) || 0) + 1);
   return selected;
@@ -264,6 +274,7 @@ async function initializeQuestionBank() {
     }
 
     usedQuestionsByTheme = new Map(THEMES.map((theme) => [theme, new Set()]));
+    lastQuestionIdByTheme = new Map();
     loadNextRandomQuestion();
   } catch (error) {
     output.textContent = `❌ Setup error\n${error.message}`;
