@@ -1,39 +1,39 @@
 # Valeur métier mesurable
 
 ## 🎯 Problème métier ciblé
-Difficulté à filtrer rapidement et objectivement un volume important de candidatures techniques en phase de préqualification.
+Préqualifier objectivement des candidats techniques sans surconsommer du temps senior.
 
 ## ⏱ Temps économisé (estimation)
-- Hypothèse : 100 candidatures/mois.
-- Avant : 20 min de screening technique initial/candidat.
-- Avec ce POC : 5 min de revue des résultats/candidat.
-- **Gain estimé : 15 min x 100 = 1 500 min/mois (~25 h/mois).**
+- Volume : 100 candidatures / mois
+- Avant : 20 min de screening technique manuel / candidat
+- Après : 5 min de revue de résultat / candidat
+- **Gain : 15 min x 100 = 1 500 min/mois (~25 h/mois)**
 
 ## 💰 Coût évité ou réduit
-- Hypothèse coût chargé d’un évaluateur : 60 €/h.
-- **Économie estimée : 25 h x 60 € = 1 500 €/mois.**
+- Coût chargé évaluateur : 60 €/h
+- **Économie estimée : 25 h x 60 € = 1 500 €/mois**
 
 ## 🛡 Risque diminué
-- Réduction du risque de biais lié à des screenings manuels hétérogènes.
-- Réduction du risque de surcharge d’équipe technique en recrutement intensif.
+- Réduction du biais inter-évaluateur en préqualification.
+- Réduction du risque de saturation des experts techniques.
 
 ## 🚀 Capacité nouvelle créée
-- Capacité à industrialiser une étape de préqualification technique.
-- Possibilité de comparer les cohortes sur des bases communes (scores, thèmes, progression).
+- Mise en place d'un entonnoir de recrutement instrumenté.
+- Comparaison de cohortes candidats sur des critères homogènes.
 
 ## KPIs proposés
-- Taux de complétion du test (% candidats ayant terminé).
-- Score moyen par thème (SQL, Java, Angular, TypeScript, Spring).
+- Taux de complétion du test.
+- Score moyen global et par thème.
 - Temps moyen de complétion.
-- Taux de conversion vers entretien technique après test.
-- Temps moyen de traitement d’une candidature (avant/après).
+- Taux de conversion test -> entretien.
+- Temps de traitement d'une candidature (avant/après).
 
 ## Hypothèses explicites
-- Les questions reflètent correctement le niveau attendu pour le poste.
-- Les candidats réalisent le test en autonomie sans assistance externe.
-- Le score corrèle suffisamment avec la performance en entretien technique.
+- La banque de questions est alignée avec les compétences attendues.
+- Les candidats passent le test en autonomie.
+- Le score est corrélé à la réussite en entretien technique.
 
 ## Conditions de validité
-- Banque de questions maintenue à jour trimestriellement.
-- Calibration régulière des seuils de score par rôle.
-- Échantillon minimal recommandé : 50 candidatures pour tirer des tendances KPI.
+- Revue trimestrielle des questions.
+- Recalibrage des seuils de score par rôle.
+- Minimum 50 candidats pour interpréter les tendances.

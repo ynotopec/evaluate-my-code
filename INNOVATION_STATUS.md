@@ -7,21 +7,21 @@
 - [ ] Standard interne
 - [ ] Service production
 
-## Métadonnées de suivi
+## Suivi
 - **Date de création** : 2026-02-22
 - **Responsable** : Équipe Talent Tech / Engineering Enablement
-- **Prochaine étape attendue** : Pilote avec un vrai flux de recrutement (1 équipe, 1 mois)
+- **Prochaine étape attendue** : Pilote sur 1 équipe recrutement pendant 1 mois
 
-## Critères de passage au niveau supérieur (POC -> Pilote)
-- Au moins 50 candidats évalués.
-- Collecte de KPI complète (complétion, scores, conversion entretien).
-- Feedback recruteurs >= 4/5 sur l’utilité opérationnelle.
-- Aucune anomalie bloquante de session pendant 4 semaines.
+## Critères de passage POC -> Pilote
+- 50+ candidats évalués sur une période continue.
+- Collecte complète des KPIs définis dans `VALUE.md`.
+- Satisfaction recruteurs >= 4/5.
+- 0 incident bloquant sur 4 semaines.
 
 ## Risques identifiés
-- Obsolescence des questions techniques.
-- Corrélation insuffisante entre score QCM et performance réelle.
-- Friction UX candidate pouvant réduire le taux de complétion.
+- Vieillissement de la banque de questions.
+- Corrélation partielle score QCM vs performance réelle.
+- Baisse du taux de complétion en cas de friction UX.
 
 ## Pipeline de maturité
 
