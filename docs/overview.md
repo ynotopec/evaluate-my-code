@@ -1,22 +1,33 @@
 # Overview technique
 
 ## Objectif
-Fournir un environnement d’évaluation technique rapide à exécuter pour des tests QCM multi-thèmes avec scoring, contraintes de temps, et éléments d’intégrité.
+Fournir un artefact réutilisable pour la préqualification technique : QCM chronométré, scoring instantané, analytics de session et journal d'intégrité.
+
+## Périmètre fonctionnel
+- Session de test avec questions à choix unique.
+- Minuteur global de session.
+- Calcul de score par réponse (10/0).
+- Statistiques de session (tentatives, moyenne, distribution).
+- Journal d'intégrité (événements utilisateur/session).
 
 ## Composants
-- `index.html` : structure UI (onglets Tutoriel / Test / Intégrité)
-- `styles.css` : styles de l’interface
-- `script.js` : logique applicative (chargement questions, randomisation, scoring, timer, événements)
-- `questions.json` : référentiel local de questions
+- `index.html` : structure des écrans (Tutoriel, Test, Intégrité)
+- `styles.css` : style et lisibilité de l'interface
+- `script.js` : orchestration métier front-end
+- `questions.json` : jeu de questions local versionné
+- `Makefile` : exécution et vérification des artefacts attendus
 
-## Fonctionnement synthétique
-1. L’application charge `questions.json`.
-2. Les questions sont distribuées par rotation équilibrée de thèmes.
-3. Une réponse est évaluée en score binaire (10/0).
-4. Les statistiques de session (tentatives, moyenne, distribution) sont mises à jour.
-5. Le journal d’intégrité enregistre les événements de session.
+## Exécution
+```bash
+make run
+```
 
-## Limites connues (POC)
-- Stockage local en mémoire uniquement (pas de persistance backend)
-- Authentification non implémentée
-- Anti-triche avancée non implémentée (webcam, proctoring, etc.)
+## Dépendances explicites
+- `python3`
+- `make`
+- navigateur moderne (Chrome/Firefox/Safari/Edge)
+
+## Limites connues (niveau POC)
+- Pas de persistance serveur (session en mémoire navigateur).
+- Pas d'authentification/SSO.
+- Pas de mécanisme anti-fraude avancé.

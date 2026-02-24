@@ -1,37 +1,43 @@
-# Plateforme d'évaluation technique QCM (POC structuré)
+# Plateforme d'évaluation technique QCM
 
-Ce dépôt fournit une application web statique permettant de simuler un test technique en mode QCM (SQL, Java, Angular, TypeScript, Spring Framework), avec minuterie, score, analytics de session et journal d’intégrité.
+Ce repository contient un POC **documenté et relançable** pour évaluer des candidats via un QCM technique (SQL, Java, Angular, TypeScript, Spring).
 
-## Démarrage rapide (≤ 10 min)
+## Démarrage en moins de 10 minutes
 
 ### Prérequis
-- `python3` (version 3.8+ recommandée)
+- `python3` (3.8+)
 - `make`
 
-### Lancer en une commande
+### Lancer l'application
 ```bash
 make run
 ```
-Puis ouvrir : <http://localhost:4173>
+Application disponible sur : <http://localhost:4173>
 
 ## Installation déterministe
-Aucune dépendance externe n’est nécessaire :
-- Front-end statique (`index.html`, `styles.css`, `script.js`)
-- Banque de questions locale (`questions.json`)
-- Serveur local Python standard library
+Aucune installation de package n'est nécessaire :
+- serveur HTTP : module standard `python3 -m http.server`
+- UI : `index.html`, `styles.css`, `script.js`
+- données : `questions.json`
 
-## Exemple reproductible (entrée / sortie)
-1. Ouvrir l’onglet **Test**.
-2. Sélectionner une réponse.
-3. Cliquer **Submit answer**.
+## Exemple reproductible d'entrée/sortie
+1. Ouvrir l'onglet **Test**.
+2. Répondre à une question.
+3. Cliquer sur **Submit answer**.
 
-Sortie attendue (dans la zone de sortie) :
-- Bonne réponse : `✅ Correct answer. +10 points.`
-- Mauvaise réponse : `❌ Incorrect answer. +0 point.`
+Sorties attendues :
+- `✅ Correct answer. +10 points.`
+- `❌ Incorrect answer. +0 point.`
 
-## Documentation
-- Vue d’ensemble technique : `docs/overview.md`
+## Commandes utiles
+```bash
+make run      # lance l'application
+make check    # vérifie les artefacts de standardisation
+```
+
+## Documentation du projet
+- Vue d'ensemble : `docs/overview.md`
 - Architecture : `docs/architecture.md`
-- Cas d’usage métier : `USE_CASE.md`
-- Valeur métier mesurable : `VALUE.md`
-- Trajectoire d’innovation : `INNOVATION_STATUS.md`
+- Cas d'usage : `USE_CASE.md`
+- Valeur métier : `VALUE.md`
+- Statut d'innovation : `INNOVATION_STATUS.md`

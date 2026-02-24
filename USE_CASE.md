@@ -1,14 +1,20 @@
-# Cas d’usage réel
+# Cas d'usage réel
 
-## Contexte
-Une ESN doit présélectionner rapidement des candidats développeurs full-stack sans mobiliser immédiatement un senior technique.
+## Problème terrain
+Une équipe recrutement reçoit un volume élevé de candidatures techniques et mobilise trop tôt des seniors pour des screenings manuels peu homogènes.
 
-## Utilisation
-1. Le recruteur envoie un lien vers l’évaluation.
-2. Le candidat passe une session QCM limitée dans le temps.
-3. Le recruteur récupère un score et un historique de session pour décider d’un entretien technique approfondi.
+## Utilisateurs cibles
+- Recruteurs / Talent Acquisition
+- Engineering Managers
+- Équipe technique d'évaluation
 
-## Résultat attendu
-- Réduction du temps de tri initial.
-- Filtrage homogène des candidatures.
-- Décision plus rapide sur les profils à interviewer.
+## Scénario nominal
+1. Le recruteur envoie un lien de test au candidat.
+2. Le candidat réalise le QCM dans un temps contraint.
+3. Le recruteur obtient un score et des indicateurs de session.
+4. Seuls les profils au-dessus d'un seuil passent à l'entretien technique.
+
+## Résultats attendus
+- Diminution du temps de tri initial.
+- Standardisation de la préqualification.
+- Priorisation plus rapide des entretiens à forte valeur.
